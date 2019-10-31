@@ -1,0 +1,13 @@
+GEM
+  remote: http://user:password@server:9292/
+  specs:
+    hola (0.0.1)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  hola (= 0.0.1)
+
+BUNDLED WITH
+   1.17.3

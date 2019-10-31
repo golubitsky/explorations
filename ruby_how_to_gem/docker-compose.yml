@@ -1,0 +1,42 @@
+version: "3"
+
+volumes:
+  gem_server_data:
+
+services:
+  server:
+    image: spoonest/geminabox:latest
+    environment:
+      - USERNAME=user
+      - PASSWORD=password
+      - PRIVATE=true
+    ports:
+      - 9292:9292
+    volumes:
+      - gem_server_data:/webapps/geminabox/data
+
+  upload:
+    image: ruby:2.5
+    volumes:
+      - .:/usr/src
+    working_dir: /usr/src/uploader
+    command: ./upload.sh
+    depends_on:
+      - server
+
+  build-gem:
+    image: ruby:2.5
+    volumes:
+      - .:/usr/src
+    working_dir: /usr/src/gem
+    command: gem build hola.gemspec
+
+  app:
+    image: ruby:2.5
+    volumes:
+      - .:/usr/src
+    working_dir: /usr/src/app
+    entrypoint: ../entrypoint.sh
+    depends_on:
+      - server
+    command: ruby app.rb
