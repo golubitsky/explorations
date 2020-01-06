@@ -15,3 +15,8 @@ docker-compose run --rm transpose giant_steps.txt
 - Currently only transposing up half step.
 - Tested only with Giant Steps. Some chords not implemented.
 - Some chords get transposed into awkward keys (e.g. "A# D#" vs "Bb Eb").
+
+## Desired Features
+
+- "X over Y" chords like `Bb/F`
+- Pass through non-chord-symbol chars (like repeats `||:` and `:||`)
