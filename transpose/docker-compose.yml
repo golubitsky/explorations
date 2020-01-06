@@ -1,0 +1,9 @@
+version: "3"
+
+services:
+  transpose:
+    image: python
+    volumes:
+      - .:/app
+    working_dir: /app
+    entrypoint: ./entrypoint.sh
