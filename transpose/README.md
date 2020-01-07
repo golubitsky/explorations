@@ -10,13 +10,13 @@ Changes formatted as _n_ lines of space-separated chords.
 docker-compose run --rm transpose giant_steps.txt
 ```
 
-## Limitations!
-
-- Currently only transposing up half step.
-- Tested only with Giant Steps. Some chords not implemented.
-- Some chords get transposed into awkward keys (e.g. "A# D#" vs "Bb Eb").
-
 ## Desired Features
 
-- "X over Y" chords like `Bb/F`
-- Pass through non-chord-symbol chars (like repeats `||:` and `:||`)
+- [ ] Currently only transposing up half step.
+- [ ] Some chords not implemented.
+- [x] Some chords get transposed into awkward keys (e.g. "A# D#" vs "Bb Eb").
+
+  - [ ] Need chord-context-aware solution.
+
+- [ ] "X over Y" chords like `Bb/F`
+- [x] Pass through non-chord-symbol chars for repeats, like `||:` and `:||`

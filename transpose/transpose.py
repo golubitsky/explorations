@@ -4,9 +4,11 @@ import sys
 
 KEYS = 'ABCDEFG'
 
+IGNORE_SYMBOLS = set(['||:', ':||', '||', '1.', '2.'])
+
 
 def letter(symbol):
-    return symbol[0]
+    return symbol[0].upper()
 
 
 def accidental(symbol):
@@ -19,23 +21,29 @@ def quality(symbol):
 
 
 def one_letter_up(letter):
-    return KEYS[(KEYS.find(letter.upper()) + 1) % 7]
+    return KEYS[(KEYS.find(letter) + 1) % len(KEYS)]
 
 
 def transposed(symbol):
+    if symbol in IGNORE_SYMBOLS:
+        return symbol
+
     if accidental(symbol) == 'b':
-        if letter(symbol).upper() in 'BEADG':
+        if letter(symbol) in 'BEADG':
             return f'{letter(symbol)}{quality(symbol)}'
         else:
             raise NotImplementedError(symbol)
     if accidental(symbol) == '#':
-        if letter(symbol).upper() in 'GCFDA':
+        if letter(symbol) in 'GCFDA':
             return f'{one_letter_up(letter(symbol))}{quality(symbol)}'
         else:
             raise NotImplementedError(symbol)
 
-    if letter(symbol).upper() in 'GCFDA':
+    if letter(symbol) in 'GCF':
         return f'{letter(symbol)}#{quality(symbol)}'
+    elif letter(symbol) in 'DA':
+        # prefer flats for now
+        return f'{one_letter_up(letter(symbol))}b{quality(symbol)}'
     else:
         return f'{one_letter_up(letter(symbol))}{quality(symbol)}'
 
