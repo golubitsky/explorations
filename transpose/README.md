@@ -1,3 +1,5 @@
+# Transpose
+
 I was learning Giant Steps and wanted a quick way to transpose the entire tune, using technology.
 
 ## To use
@@ -8,9 +10,9 @@ Optional second argument to specify _n_ half-steps to transpose up.
 
 ```bash
 # e.g.
-docker-compose run --rm transpose giant_steps.txt
+docker-compose run --rm develop python transpose.py giant_steps.txt 5
 # perfect fifth up
-docker-compose run --rm transpose tune_up.txt 7
+docker-compose run --rm develop python transpose.py tune_up.txt 7
 ```
 
 ## Desired Features

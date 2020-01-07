@@ -1,9 +1,10 @@
-version: "3"
+version: "3.4"
+
+x-app: &default-app
 
 services:
-  transpose:
-    image: python
+  develop:
+    build: .
     volumes:
       - .:/app
-    working_dir: /app
-    entrypoint: ./entrypoint.sh
+    working_dir: /app 
