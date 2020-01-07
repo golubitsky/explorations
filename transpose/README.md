@@ -18,6 +18,7 @@ docker-compose run --rm transpose tune_up.txt 7
 - [x] Transpose up half-step.
 - [x] Transpose up _n_ half-steps.
 - [ ] Transpose down _n_ half-steps.
+- [ ] Transpose by interval (`M3`, `P5`, `m6`, etc.)
 - [ ] Some chords not implemented.
 - [x] Some chords get transposed into awkward keys (e.g. "A# D#" vs "Bb Eb").
 
