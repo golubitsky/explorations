@@ -1,6 +1,6 @@
 import re
 import sys
-
+import copy
 
 KEYS = 'ABCDEFG'
 
@@ -52,8 +52,13 @@ def transposed_line(line):
     return [transposed(symbol) for symbol in line]
 
 
-def tune_transposed_up_half_step(lines_of_chords):
-    return [transposed_line(line) for line in lines_of_chords]
+def tune_transposed_up(lines_of_chords, n_half_steps):
+    transposed = copy.deepcopy(lines_of_chords)
+
+    for half_step in range(n_half_steps):
+        transposed = [transposed_line(line) for line in transposed]
+
+    return transposed
 
 
 def lines_of_chords(filename):
@@ -62,6 +67,11 @@ def lines_of_chords(filename):
 
 
 if __name__ == '__main__':
+    try:
+        half_steps_up = int(sys.argv[2])
+    except IndexError:
+        half_steps_up = 1
     lines = lines_of_chords(f'tunes/{sys.argv[1]}')
-    for line in tune_transposed_up_half_step(lines):
+
+    for line in tune_transposed_up(lines, half_steps_up):
         print(' '.join(line))

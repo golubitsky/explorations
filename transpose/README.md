@@ -3,16 +3,21 @@ I was learning Giant Steps and wanted a quick way to transpose the entire tune, 
 ## To use
 
 Put a tune's changes into a file in `tunes` dir.  
-Changes formatted as _n_ lines of space-separated chords.
+Changes formatted as _n_ lines of space-separated chords.  
+Optional second argument to specify _n_ half-steps to transpose up.
 
 ```bash
 # e.g.
 docker-compose run --rm transpose giant_steps.txt
+# perfect fifth up
+docker-compose run --rm transpose tune_up.txt 7
 ```
 
 ## Desired Features
 
-- [ ] Currently only transposing up half step.
+- [x] Transpose up half-step.
+- [x] Transpose up _n_ half-steps.
+- [ ] Transpose down _n_ half-steps.
 - [ ] Some chords not implemented.
 - [x] Some chords get transposed into awkward keys (e.g. "A# D#" vs "Bb Eb").
 
