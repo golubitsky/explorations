@@ -1,0 +1,22 @@
+version: "3.4"
+
+services:
+  chaos:
+    build:
+      context: .
+      args:
+        SERVICE_DIR: ./services/chaos
+    volumes:
+      - ./services/chaos:/usr/src/app
+    ports:
+      - "5000:5000"
+
+  gaia:
+    build:
+      context: .
+      args:
+        SERVICE_DIR: ./services/gaia
+    volumes:
+      - ./services/gaia:/usr/src/app
+    ports:
+      - "5001:5000"
