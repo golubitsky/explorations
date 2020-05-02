@@ -1,6 +1,11 @@
 from flask import Flask
+import pika
 
 app = Flask(__name__)
+
+
+def send_message():
+    pass
 
 
 @app.route('/health')
