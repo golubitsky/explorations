@@ -8,3 +8,6 @@
 
 (deftest something
   (is (= "Hello, Mike" (foo "Mike"))))
+
+;; (deftest day-1-test
+;;   (is (= 200 (day-1))))
