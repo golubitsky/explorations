@@ -1,0 +1,60 @@
+html body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.header,
+.footer {
+  background-color: lightslategray;
+}
+.header {
+  height: 5vh;
+}
+
+.footer {
+  height: 10vh;
+}
+
+.App {
+  display: flex;
+  flex-direction: column;
+  height: 85vh;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 0px 0px;
+  grid-template-areas:
+    "upper-left upper-right"
+    "lower-left lower-right";
+  /* This works in concert with flex-direction of parent.*/
+  flex: 1;
+}
+
+.grid-container > * {
+  /* Horizontally and vertically center text */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* Text size will be responsive using JavaScript */
+}
+
+.upper-left {
+  background-color: lightsteelblue;
+  grid-area: upper-left;
+}
+.upper-right {
+  background-color: lightseagreen;
+  grid-area: upper-right;
+}
+.lower-left {
+  background-color: lightblue;
+  grid-area: lower-left;
+}
+.lower-right {
+  background-color: lightskyblue;
+  grid-area: lower-right;
+}
