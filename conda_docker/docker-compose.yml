@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  conda:
+    image: continuumio/anaconda3
+    stdin_open: true
+    tty: true
+    volumes:
+      - .:/usr/src
+    entrypoint: /usr/src/docker/entrypoint.sh
+    environment:
+      - NOTEBOOK_PORT
+    ports:
+      - ${NOTEBOOK_PORT}:${NOTEBOOK_PORT}

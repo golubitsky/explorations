@@ -1,0 +1,12 @@
+## Dockerized Jupyter
+
+To spin up a Jupyter server:
+
+```sh
+docker-compose up
+```
+
+Navigate to http://localhost:8888
+
+- Notebooks will be saved to the host's `./notebooks` directory.
+- To change the port, change the `NOTEBOOK_PORT` in `./.env`.
