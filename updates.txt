@@ -1,0 +1,61 @@
+Get:1 http://ppa.launchpad.net/system76-dev/stable/ubuntu focal InRelease [17.5 kB]
+Hit:2 http://archive.ubuntu.com/ubuntu bionic InRelease
+Get:3 http://ppa.launchpad.net/system76/pop/ubuntu focal InRelease [18.0 kB]
+Get:4 http://ppa.launchpad.net/system76-dev/stable/ubuntu focal/main Sources [9,972 B]
+Get:5 http://ppa.launchpad.net/system76-dev/stable/ubuntu focal/main i386 Packages [8,416 B]
+Get:6 http://ppa.launchpad.net/system76-dev/stable/ubuntu focal/main amd64 Packages [26.1 kB]
+Get:7 http://ppa.launchpad.net/system76-dev/stable/ubuntu focal/main Translation-en [10.3 kB]
+Get:8 http://ppa.launchpad.net/system76/pop/ubuntu focal/main Sources [30.5 kB]
+Get:9 http://ppa.launchpad.net/system76/pop/ubuntu focal/main amd64 Packages [76.2 kB]
+Get:10 http://ppa.launchpad.net/system76/pop/ubuntu focal/main i386 Packages [36.5 kB]
+Fetched 234 kB in 2s (101 kB/s)
+Reading package lists...
+Building dependency tree...
+Reading state information...
+1363 packages can be upgraded. Run 'apt list --upgradable' to see them.
+Reading package lists...
+Building dependency tree...
+Reading state information...
+0 upgraded, 0 newly installed, 0 to remove and 1364 not upgraded.
+Reading package lists...
+Building dependency tree...
+Reading state information...
+Calculating upgrade...
+Some packages could not be installed. This may mean that you have
+requested an impossible situation or if you are using the unstable
+distribution that some required packages have not yet been created
+or been moved out of Incoming.
+The following information may help to resolve the situation:
+
+The following packages have unmet dependencies:
+ pop-desktop : Depends: nautilus-share but it is not going to be installed
+Reading package lists...
+Building dependency tree...
+Reading state information...
+0 upgraded, 0 newly installed, 0 to remove and 1364 not upgraded.
+Reading package lists...
+Building dependency tree...
+Reading state information...
+gdm3 is already the newest version (3.36.3-0ubuntu0.20.04.3pop0~1608151112~20.04~0ad0f3a).
+gdm3 set to manually installed.
+Some packages could not be installed. This may mean that you have
+requested an impossible situation or if you are using the unstable
+distribution that some required packages have not yet been created
+or been moved out of Incoming.
+The following information may help to resolve the situation:
+
+The following packages have unmet dependencies:
+ pop-desktop : Depends: libegl-mesa0 but it is not going to be installed
+               Depends: gstreamer1.0-vaapi but it is not installable
+               Depends: libblockdev-mdraid2 but it is not installable
+               Depends: libvdpau-va-gl1 but it is not installable
+               Depends: mesa-vulkan-drivers but it is not going to be installed
+               Depends: appmenu-gtk2-module but it is not installable
+               Recommends: io.elementary.sideload but it is not installable
+               Recommends: libavcodec58 but it is not installable
+               Recommends: pop-transition but it is not going to be installed
+               Recommends: fonts-noto-color-emoji but it is not going to be installed
+               Recommends: gnome-shell-extension-prefs but it is not going to be installed
+               Recommends: network-manager-config-connectivity-pop but it is not going to be installed
+               Recommends: appmenu-gtk3-module but it is not installable
+               Recommends: flatpak but it is not going to be installed
