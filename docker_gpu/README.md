@@ -63,4 +63,4 @@ hi
 
 This appears to succeed.
 
-Need to devise a test to confirm that GPU is actually used.
+Need to devise a test to confirm that GPU is actually used (start [here](https://www.tensorflow.org/tutorials/quickstart/beginner)?).
