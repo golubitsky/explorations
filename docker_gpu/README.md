@@ -63,7 +63,16 @@ hi
 
 This appears to succeed.
 
-Need to devise a test to confirm that GPU is actually used (start [here](https://www.tensorflow.org/tutorials/quickstart/beginner)?).
+To confirm that the GPU is available:
+
+```
+docker build -t docker_gpu .
+docker run --gpus=all -it docker_gpu python ./is_gpu_available.py
+```
+
+### Tensorflow Quickstart
+
+Found [here](https://www.tensorflow.org/tutorials/quickstart/beginner).
 
 I made a Dockerfile and added a script for convenient development:
 
