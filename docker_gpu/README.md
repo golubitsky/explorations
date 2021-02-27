@@ -65,9 +65,9 @@ This appears to succeed.
 
 Need to devise a test to confirm that GPU is actually used (start [here](https://www.tensorflow.org/tutorials/quickstart/beginner)?).
 
-I made a Dockerfile.
+I made a Dockerfile and added a script for convenient development:
 
 ```sh
-$ docker build -t quickstart .
-$ docker run -it quickstart
+# To always run the latest code
+$ ./build_and_run.sh
 ```
