@@ -16,3 +16,7 @@
     - One service subscribing
     - Diagram auto-populates from config.
       - See: https://medium.com/@90valentin/visualizing-your-rabbitmq-instance-with-alicemq-787a422c03de
+
+# See also
+
+https://flowchart.fun/
