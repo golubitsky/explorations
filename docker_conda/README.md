@@ -1,3 +1,5 @@
+If you don't have `docker` or `docker-compose` commands, see [here](https://golubitsky.github.io/blog/2021/03/08/Getting-Started-With-Docker.html).
+
 ## Dockerized Jupyter
 
 To spin up a Jupyter server:
