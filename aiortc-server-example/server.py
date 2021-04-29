@@ -115,6 +115,9 @@ async def offer(request):
 
     # prepare local media
     player = MediaPlayer(os.path.join(ROOT, "demo-instruct.wav"))
+
+    print(f"RECORDING TO {args.record_to}")
+
     if args.record_to:
         recorder = MediaRecorder(args.record_to)
     else:
@@ -157,6 +160,7 @@ async def offer(request):
 
     # handle offer
     await pc.setRemoteDescription(offer)
+    print("START RECORDING")
     await recorder.start()
 
     # send answer
