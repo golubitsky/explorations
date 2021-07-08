@@ -1,0 +1,11 @@
+version: "3.9"
+services:
+  develop:
+    image: another-python-chess:develop
+    volumes:
+      - .:/app
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=development
+      - PYTHONWARNINGS=ignore # not good, but many warnings during pytest execution
