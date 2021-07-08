@@ -11,4 +11,4 @@ test: build
 	docker-compose run --rm develop pytest -f --color=yes -p no:cacheprovider
 
 feedback: build
-	docker-compose run --rm develop watch -n 1 python3 src/game.py
+	docker-compose run --rm develop watch --color -n 1 python3 src/game.py
