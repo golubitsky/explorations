@@ -41,7 +41,7 @@ I normally use `autoSave` so I have to disable that temporarily. I don't know ho
 
 ## Intended Workflow!
 
-1. Run TCR (`cmd+shfit+r`) and hope for the best. This runs the tests. If tests pass a `working` commit is made. Else, all changes are removed!
+1. Run TCR (`cmd+shift+r`) and hope for the best. This runs the tests. If tests pass a `working` commit is made. Else, all changes are removed!
 2. Repeat 1 indefinitely or until feature complete.
 3. `make branch_as_one_commit` to soft reset + recommit;
 4. Manually rename commit from previous step.
@@ -50,6 +50,7 @@ I normally use `autoSave` so I have to disable that temporarily. I don't know ho
 ## My experience with it!
 
 - The first time I wrote a bunch of code and felt reluctant to run TCR was interesting. Felt a sense of a risk. Then saw all my code disappear. Then laughed. High stakes.
+- The requirement to make a change small enough to succeed induces continuous refactoring to "make ready" to implement the change.
 
 ## Project I'm implementing in this directory
 
