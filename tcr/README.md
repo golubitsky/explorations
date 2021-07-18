@@ -46,3 +46,11 @@ I normally use `autoSave` so I have to disable that temporarily. I don't know ho
 3. `make branch_as_one_commit` to soft reset + recommit;
 4. Manually rename commit from previous step.
 5. Merge to master.
+
+## My experience with it!
+
+- The first time I wrote a bunch of code and felt reluctant to run TCR was interesting. Felt a sense of a risk. Then saw all my code disappear. Then laughed. High stakes.
+
+## Project I'm implementing in this directory
+
+https://codingdojo.org/kata/PacMan/

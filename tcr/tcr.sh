@@ -1,1 +1,1 @@
-make test && git add -A && git commit -m 'working' || git reset --hard
+make test && make commit || make revert
