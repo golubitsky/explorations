@@ -81,3 +81,18 @@ quadritonal_arpeggios.each do |arpeggio|
 end
 
 puts "Found #{quadritonal_arpeggios.count} quadritonal arpeggios, listed above."
+
+# $ ruby slominsky_quadritonal_arpeggios.rb
+# ["C Eb Gb", "D G Bb", "E Ab B", "Db F A"]
+# ["Db E G", "Eb Ab B", "C F A", "D Gb Bb"]
+# ["D F Ab", "C E A", "Db Gb Bb", "Eb G B"]
+# ["Eb Gb A", "Db F Bb", "D G B", "C E Ab"]
+# ["E G Bb", "D Gb B", "C Eb Ab", "Db F A"]
+# ["F Ab B", "C Eb G", "Db E A", "D Gb Bb"]
+# ["C Gb A", "Db E Ab", "D F Bb", "Eb G B"]
+# ["Db G Bb", "D F A", "Eb Gb B", "C E Ab"]
+# ["D Ab B", "Eb Gb Bb", "C E G", "Db F A"]
+# ["C Eb A", "E G B", "Db F Ab", "D Gb Bb"]
+# ["Db E Bb", "C F Ab", "D Gb A", "Eb G B"]
+# ["D F B", "Db Gb A", "Eb G Bb", "C E Ab"]
+# Found 12 quadritonal arpeggios, listed above.
