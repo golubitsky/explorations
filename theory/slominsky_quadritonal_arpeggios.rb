@@ -43,10 +43,6 @@ def all_possible_triads_by_quality
   QUALITIES.to_h { |quality| [quality, all_possible_triads(quality)] }
 end
 
-def quadritonal_arpeggio?(arpeggio)
-  arpeggio.flatten.uniq == 12
-end
-
 def all_notes_unique?(*triads)
   triads.flatten.uniq.count == triads.count * 3
 end
