@@ -10,11 +10,8 @@ class ClassyHuman
   end
 end
 
-def human_via_closure(name)
-  
-end
+def human_via_closure(name); end
 
-def say_hello
-end
+def say_hello; end
 
 ClassyHuman.new('Fred').say_hello
