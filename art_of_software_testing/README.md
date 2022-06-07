@@ -34,4 +34,4 @@ The ones I missed are:
 10. At least three test cases in category 9 such that you have tried all three permutations
 11. A test case in which all sides are 0 — I think I should get half a point here because I have 3 separate tests about a 0 not being allowed at _any_ of the three positions.
 
-(**Note:** I have added test cases for points 9 through 11 in an additional commit after scoring; adding those tests did not require updating the implementation.)
+(**Note:** I have added test cases for points 9 through 11 in an [additional commit after scoring](https://github.com/golubitsky/explorations/commit/35b84d10492a96e267cbb943b8206c5f74d4a84a); adding those tests did not require updating the implementation.)
