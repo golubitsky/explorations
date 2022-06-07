@@ -8,6 +8,14 @@ Before beginning the book, it is strongly recommended that you take the followin
 
 On a sheet of paper, write a set of test cases (i.e., specific sets of data) that you feel would adequately test this program. When you have completed this, turn the page to analyze your tests.
 
+## Installation
+
+This is a Ruby program, using [Bundler](https://bundler.io/) to manage dependencies.
+
+```
+bundle install
+```
+
 ## Run the tests
 
 ```
