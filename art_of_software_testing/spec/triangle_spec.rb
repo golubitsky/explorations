@@ -28,15 +28,20 @@ RSpec.describe 'A Self-Assessment Test' do
         [-1, 1, 1],
         [1, -1, 1],
         [1, 1, -1],
-        # zero side - maybe not needed? Probably impossible to break inequality
-        # theorem with a zero side
+        # zero side
         [0, 2, 2],
         [2, 0, 2],
         [2, 2, 0],
-        # breaks triangle inequality theorem
+        # all zero sides
+        [0, 0, 0],
+        # breaks triangle inequality theorem; sum of 2 sides equals 3rd
         [2, 1, 1],
         [1, 2, 1],
         [1, 1, 2],
+        # breaks triangle inequality theorem; sum of 2 sides less than 3rd
+        [100, 7, 11],
+        [7, 100, 11],
+        [7, 11, 100],
         # only accepts integers (even if triangle is otherwise valid)
         %w[1 1 1],
         # too many or too few values

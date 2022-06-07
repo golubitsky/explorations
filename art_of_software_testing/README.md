@@ -33,3 +33,5 @@ The ones I missed are:
 9. A test case with three integers greater than zero such that the sum of two of the numbers is less than the third (e.g., 1,2,4 or 12,15,30)
 10. At least three test cases in category 9 such that you have tried all three permutations
 11. A test case in which all sides are 0 — I think I should get half a point here because I have 3 separate tests about a 0 not being allowed at _any_ of the three positions.
+
+(**Note:** I have added test cases for points 9 through 11 in an additional commit after scoring; adding those tests did not require updating the implementation.)
