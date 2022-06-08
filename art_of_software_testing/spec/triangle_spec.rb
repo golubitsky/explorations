@@ -18,7 +18,7 @@ RSpec.describe 'A Self-Assessment Test' do
       [[5, 3, 4], 'scalene']
     ].each do |(card, triangle_type)|
       it "identifies #{card.join(', ')} as #{triangle_type}" do
-        expect(triangle(card)).to eq(triangle_type)
+        expect(triangle_type(card)).to eq(triangle_type)
       end
     end
   end
@@ -51,7 +51,7 @@ RSpec.describe 'A Self-Assessment Test' do
       [1, 1, 1, 1]
     ].each do |card_with_non_triangle|
       it "rejects invalid input #{card_with_non_triangle.inspect}" do
-        expect { triangle(card_with_non_triangle) }.to raise_error('invalid input')
+        expect { triangle_type(card_with_non_triangle) }.to raise_error('invalid input')
       end
     end
   end

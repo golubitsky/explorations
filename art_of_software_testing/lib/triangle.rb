@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-def triangle(card)
+def triangle_type(card)
   raise 'invalid input' unless valid_card?(card)
 
   {
