@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+require 'spec_helper'
 require 'common_tones'
 
 describe EngineV1 do
@@ -9,6 +12,7 @@ describe EngineV1 do
       [{ note: 'D', interval: :M2, direction: :up }, 'E'],
       [{ note: 'D', interval: :M2, direction: :down }, 'C'],
       [{ note: 'B', interval: :M2, direction: :down }, 'A'],
+      [{ note: 'Eb', interval: :m3, direction: :up }, 'Gb'],
     ].each do |(p, expected_note)|
       context "when #{p[:direction]} #{p[:interval]} from #{p[:note]}" do
         let(:p) { p }

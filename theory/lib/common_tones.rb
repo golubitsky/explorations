@@ -2,6 +2,26 @@ require 'set'
 module EngineV1
   extend self
 
+  NOTE_MINOR2_UP = {
+    'A' => 'Bb',
+    'A#' => 'B',
+    'Bb' => 'Cb',
+    'B' => 'C',
+    'C' => 'Db',
+    'C#' => 'D',
+    'Db' => 'Ebb',
+    'D' => 'Eb',
+    'D#' => 'E',
+    'Eb' => 'Fb',
+    'E' => 'F',
+    'F' => 'Gb',
+    'F#' => 'G',
+    'Gb' => 'Abb',
+    'G' => 'Ab',
+    'G#' => 'A',
+    'Ab' => 'Bbb',
+  }
+
   NOTE_MAJOR2_UP = {
     'A' => 'B',
     'A#' => 'B#',
