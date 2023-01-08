@@ -147,4 +147,11 @@ module Constants
     'Fbb' => 'Eb',
     'Gbb' => 'F',
   }
+
+  INVERSE_INTERVAL = {
+    M7: :m2,
+    m7: :M2,
+    M6: :m3,
+    m6: :M3,
+  }.freeze
 end

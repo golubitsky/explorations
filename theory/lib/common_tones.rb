@@ -10,6 +10,11 @@ module EngineV1
   def note_interval_away(note:, interval:, direction:)
     return note if interval == :P1
 
+    if INVERSE_INTERVAL[interval]
+      interval = INVERSE_INTERVAL[interval]
+      direction = %i[up down].find { |x| x != direction }
+    end
+
     notes_up_interval = {
       m2: NOTE_MINOR2_UP,
       M2: NOTE_MAJOR2_UP,
@@ -48,20 +53,22 @@ module EngineV1
     end
   end
 
-  def enharmonically_simplified_note(note)
-    ENHARMONICALLY_SIMPLIFIED[note] || note
-  end
+  def enharmonically_equivalent_notes(chord, other_chord)
+    enharmonically_simplified_other_chord =
+      other_chord.map { |note| ENHARMONICALLY_SIMPLIFIED[note] || note }
 
-  def enharmonically_simplified_chord(chord)
-    chord.map { |note| enharmonically_simplified_note(note) }
+    chord.select do |note|
+      other_chord.include?(note) ||
+        enharmonically_simplified_other_chord.include?(note)
+    end
   end
 
   def pivot_notes(note:, quality:, other_quality:, interval:, direction:)
     other_note = note_interval_away(note: note, interval: interval, direction: direction)
 
-    chord_tones = enharmonically_simplified_chord(triad(note, quality))
-    other_chord_tones = enharmonically_simplified_chord(triad(other_note, other_quality))
+    chord = triad(note, quality)
+    other_chord = triad(other_note, other_quality)
 
-    chord_tones.intersection(other_chord_tones).to_a
+    enharmonically_equivalent_notes(chord, other_chord)
   end
 end
