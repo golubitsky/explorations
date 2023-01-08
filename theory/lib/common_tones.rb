@@ -19,6 +19,7 @@ module EngineV1
     'Gb' => 'Ab',
     'G' => 'A',
     'G#' => 'A#',
+    'Ab' => 'Bb',
   }
 
   NOTE_MINOR3_UP = {
@@ -38,6 +39,7 @@ module EngineV1
     'Gb' => 'Bbb',
     'G' => 'Bb',
     'G#' => 'B',
+    'Ab' => 'Cb',
   }
 
   NOTE_MAJOR3_UP = {
@@ -45,6 +47,7 @@ module EngineV1
     'A#' => 'C##',
     'Bb' => 'D',
     'B' => 'D#',
+    'Cb' => 'Eb',
     'C' => 'E',
     'C#' => 'E#',
     'Db' => 'F',
@@ -57,6 +60,7 @@ module EngineV1
     'Gb' => 'Bb',
     'G' => 'B',
     'G#' => 'B#',
+    'Ab' => 'C',
   }
 
   NOTE_P4_UP = {
@@ -76,6 +80,7 @@ module EngineV1
     'Gb' => 'Cb',
     'G' => 'C',
     'G#' => 'C#',
+    'Ab' => 'Db',
   }
 
   NOTE_P5_UP = {
@@ -95,96 +100,46 @@ module EngineV1
     'Gb' => 'Db',
     'G' => 'D',
     'G#' => 'D#',
-  }
-
-  MAJOR = {
-    'C' => %w[C E G],
-    'C#' => %w[C# E# G#],
-    'Db' => %w[Db F Ab],
-    'D' => %w[D F# A],
-    'D#' => %w[D# F## A#],
-    'Eb' => %w[Eb G Bb],
-    'E' => %w[E G# B],
-    'F' => %w[F A C],
-    'F#' => %w[F# A# C#],
-    'Gb' => %w[Gb Bb Db],
-    'G' => %w[G B D],
-    'G#' => %w[G# B# D#],
-    'Ab' => %w[Ab C Eb],
-    'A' => %w[A C# E],
-    'A#' => %w[A# C## E#],
-    'Bb' => %w[Bb D F],
-    'B' => %w[B D# F#],
-  }
-
-  MINOR = {
-    'C' => %w[C Eb G],
-    'C#' => %w[C# E G#],
-    'Db' => %w[Db Fb Ab],
-    'D' => %w[D F A],
-    'D#' => %w[D# F# A#],
-    'Eb' => %w[Eb Gb Bb],
-    'E' => %w[E G B],
-    'F' => %w[F Ab C],
-    'F#' => %w[F# A C#],
-    'Gb' => %w[Gb Bbb Db],
-    'G' => %w[G Bb D],
-    'G#' => %w[G# B D#],
-    'Ab' => %w[Ab Cb Eb],
-    'A' => %w[A C E],
-    'A#' => %w[A# C# E#],
-    'Bb' => %w[Bb Db F],
-    'B' => %w[B D F#],
-  }
-
-  DIMINISHED = {
-    'C' => %w[C Eb Gb],
-    'C#' => %w[C# E G],
-    'Db' => %w[Db Fb Abb],
-    'D' => %w[D F Ab],
-    'D#' => %w[D# F# A],
-    'Eb' => %w[Eb Gb Bbb],
-    'E' => %w[E G Bb],
-    'F' => %w[F Ab Cb],
-    'F#' => %w[F# A C],
-    'Gb' => %w[Gb Bbb Dbb],
-    'G' => %w[G Bb Db],
-    'G#' => %w[G# B D],
-    'Ab' => %w[Ab Cb Ebb],
-    'A' => %w[A C Eb],
-    'A#' => %w[A# C# E],
-    'Bb' => %w[Bb Db Fb],
-    'B' => %w[B D F],
+    'Ab' => 'D#',
   }
 
   def note_interval_away(note:, interval:, direction:)
-    case interval
-    when 'M2'
-      direction == :up ? NOTE_MAJOR2_UP.fetch(note) : NOTE_MAJOR2_UP.invert.fetch(note)
-    when 'm3'
-      direction == :up ? NOTE_MINOR3_UP.fetch(note) : NOTE_MINOR3_UP.invert.fetch(note)
-    when 'M3'
-      direction == :up ? NOTE_MAJOR3_UP.fetch(note) : NOTE_MAJOR3_UP.invert.fetch(note)
-    when 'P4'
-      direction == :up ? NOTE_P4_UP.fetch(note) : NOTE_P4_UP.invert.fetch(note)
-    when 'P5'
-      direction == :up ? NOTE_P5_UP.fetch(note) : NOTE_P5_UP.invert.fetch(note)
-    else
-      raise "not implemented for #{interval}"
-    end
+    notes_up_interval = {
+      M2: NOTE_MAJOR2_UP,
+      m3: NOTE_MINOR3_UP,
+      M3: NOTE_MAJOR3_UP,
+      P4: NOTE_P4_UP,
+      P5: NOTE_P5_UP,
+    }.fetch(interval)
+
+    notes = direction == :up ? notes_up_interval : notes_up_interval.invert
+
+    notes.fetch(note)
   end
 
-  def pivot_notes(note:, triad:, other_triad:, interval:, direction:)
+  def triad(root, quality)
+    case quality
+    when :diminished
+      third = note_interval_away(note: root, interval: :m3, direction: :up)
+      fifth = note_interval_away(note: third, interval: :m3, direction: :up)
+    when :minor
+      third = note_interval_away(note: root, interval: :m3, direction: :up)
+      fifth = note_interval_away(note: third, interval: :M3, direction: :up)
+    when :major
+      third = note_interval_away(note: root, interval: :M3, direction: :up)
+      fifth = note_interval_away(note: third, interval: :m3, direction: :up)
+    else
+      raise "not implemented for #{quality}"
+    end
+
+    [root, third, fifth]
+  end
+
+  def pivot_notes(note:, quality:, other_quality:, interval:, direction:)
     other_note = note_interval_away(note: note, interval: interval, direction: direction)
 
-    chord_by_quality = {
-      major: MAJOR,
-      minor: MINOR,
-      diminished: DIMINISHED,
-    }
-
-    chord_tones = chord_by_quality.fetch(triad)[note].to_set
-    other_chord_tones = chord_by_quality.fetch(other_triad)[other_note].to_set
+    chord_tones = triad(note, quality)
+    other_chord_tones = triad(other_note, other_quality)
 
     chord_tones.intersection(other_chord_tones).to_a
   end
