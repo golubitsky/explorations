@@ -27,24 +27,25 @@ module EngineV1
   end
 
   def triad(root, quality)
-    case quality
-    when :diminished
-      third = note_interval_away(note: root, interval: :m3, direction: :up)
-      fifth = note_interval_away(note: third, interval: :m3, direction: :up)
-    when :minor
-      third = note_interval_away(note: root, interval: :m3, direction: :up)
-      fifth = note_interval_away(note: third, interval: :M3, direction: :up)
-    when :major
-      third = note_interval_away(note: root, interval: :M3, direction: :up)
-      fifth = note_interval_away(note: third, interval: :m3, direction: :up)
-    when :augmented
-      third = note_interval_away(note: root, interval: :M3, direction: :up)
-      fifth = note_interval_away(note: third, interval: :M3, direction: :up)
-    else
-      raise "not implemented for #{quality}"
-    end
+    intervals_by_quality = {
+      diminished: %i[m3 m3],
+      minor: %i[m3 M3],
+      major: %i[M3 m3],
+      augmented: %i[M3 M3],
+    }
+    intervals = intervals_by_quality[quality]
+    raise "triad not implemented for #{quality}" unless intervals
 
-    [root, third, fifth]
+    intervals.reduce([root]) do |chord, interval|
+      [
+        *chord,
+        note_interval_away(
+          note: chord.last,
+          interval: interval,
+          direction: :up
+        ),
+      ]
+    end
   end
 
   def enharmonically_simplified_note(note)
