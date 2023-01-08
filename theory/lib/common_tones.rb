@@ -8,6 +8,8 @@ module EngineV1
   extend self
 
   def note_interval_away(note:, interval:, direction:)
+    return note if interval == :P1
+
     notes_up_interval = {
       m2: NOTE_MINOR2_UP,
       M2: NOTE_MAJOR2_UP,
@@ -35,6 +37,9 @@ module EngineV1
     when :major
       third = note_interval_away(note: root, interval: :M3, direction: :up)
       fifth = note_interval_away(note: third, interval: :m3, direction: :up)
+    when :augmented
+      third = note_interval_away(note: root, interval: :M3, direction: :up)
+      fifth = note_interval_away(note: third, interval: :M3, direction: :up)
     else
       raise "not implemented for #{quality}"
     end

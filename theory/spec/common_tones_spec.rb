@@ -42,6 +42,8 @@ describe EngineV1 do
       # major to dim
       [{ note: 'C', quality: :major, other_quality: :diminished, interval: :M3, direction: :up }, %w[E G]],
       [{ note: 'C', quality: :major, other_quality: :diminished, interval: :m2, direction: :up }, %w[E G]],
+      # major to augmented
+      [{ note: 'Bb', quality: :major, other_quality: :augmented, interval: :P1, direction: :up }, %w[Bb D]],
     ].each do |(p, expected_pivots)|
       context "when #{p[:other_quality]} #{p[:direction]} #{p[:interval]} from #{p[:note]} #{p[:quality]}" do
         let(:p) { p }
