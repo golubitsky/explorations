@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 module Constants
+  QUALITIES = %i[diminished minor major augmented]
+
   NOTE_MINOR2_UP = {
     'A' => 'Bb',
-    'A#' => 'B',
     'Bb' => 'Cb',
     'B' => 'C',
     'C' => 'Db',
@@ -45,7 +46,10 @@ module Constants
     'A' => 'C',
     'A#' => 'C#',
     'Bb' => 'Db',
+    'Bbb' => 'Dbb',
     'B' => 'D',
+    'B#' => 'D#',
+    'Cb' => 'Ebb',
     'C' => 'Eb',
     'C#' => 'E',
     'Db' => 'Fb',
@@ -53,9 +57,11 @@ module Constants
     'D#' => 'F#',
     'Eb' => 'Gb',
     'E' => 'G',
+    'E#' => 'G#',
     'Fb' => 'Abb',
     'F' => 'Ab',
     'F#' => 'A',
+    'F##' => 'A#',
     'Gb' => 'Bbb',
     'G' => 'Bb',
     'G#' => 'B',
@@ -67,6 +73,8 @@ module Constants
     'A#' => 'C##',
     'Bb' => 'D',
     'B' => 'D#',
+    'B#' => 'D##',
+    'Bbb' => 'Db',
     'Cb' => 'Eb',
     'C' => 'E',
     'C#' => 'E#',
@@ -75,8 +83,11 @@ module Constants
     'D#' => 'F##',
     'Eb' => 'G',
     'E' => 'G#',
+    'E#' => 'G##',
+    'Fb' => 'Ab',
     'F' => 'A',
     'F#' => 'A#',
+    'F##' => 'A##',
     'Gb' => 'Bb',
     'G' => 'B',
     'G#' => 'B#',

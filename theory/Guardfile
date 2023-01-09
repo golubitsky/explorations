@@ -1,4 +1,3 @@
-# A sample Guardfile
 # More info at https://github.com/guard/guard#readme
 
 guard :rspec, cmd: 'bundle exec rspec' do
@@ -14,4 +13,6 @@ guard :rspec, cmd: 'bundle exec rspec' do
   # Ruby files
   ruby = dsl.ruby
   dsl.watch_spec_files_for(ruby.lib_files)
+
+  watch(%r{lib/.*}) { 'spec/common_tones_spec.rb' }
 end

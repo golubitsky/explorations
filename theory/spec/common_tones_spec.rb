@@ -54,4 +54,82 @@ describe EngineV1 do
       end
     end
   end
+
+  describe '.pivot_chords' do
+    subject(:chord) { described_class.pivot_chords(notes) }
+
+    context 'when one note (Eb)' do
+      let(:notes) { %w[Eb] }
+
+      it 'contains dim chord where note is 5th' do
+        expect(chord).to include(%w[A C Eb])
+      end
+
+      it 'contains min chord where note is 5th' do
+        expect(chord).to include(%w[Ab Cb Eb])
+      end
+
+      it 'contains maj chord where note is 5th' do
+        expect(chord).to include(%w[Ab C Eb])
+      end
+
+      xit 'contains aug chord where note is 5th' do
+        # not sure how to get this to pass.. use enharmonic equivalent?
+        expect(chord).to include(%w[Abb Cb Eb])
+      end
+
+      it 'contains dim chord where note is 3rd' do
+        expect(chord).to include(%w[C Eb Gb])
+      end
+
+      it 'contains min chord where note is 3rd' do
+        expect(chord).to include(%w[C Eb G])
+      end
+
+      xit 'contains maj chord where note is 3rd' do
+        expect(chord).to include(%w[Cb Eb Gb])
+      end
+
+      xit 'contains aug chord where note is 3rd' do
+        expect(chord).to include(%w[Cb Eb G])
+      end
+
+      it 'contains dim chord where note is root' do
+        expect(chord).to include(%w[Eb Gb Bbb])
+      end
+
+      it 'contains min chord where note is root' do
+        expect(chord).to include(%w[Eb Gb Bb])
+      end
+
+      it 'contains maj chord where note is root' do
+        expect(chord).to include(%w[Eb G Bb])
+      end
+
+      it 'contains aug chord where note is root' do
+        expect(chord).to include(%w[Eb G B])
+      end
+    end
+
+    context 'when two notes' do
+      let(:notes) { %w[A C] }
+
+      it 'returns all chords that contain both notes' do
+        expect(chord).to contain_exactly(
+          %w[A C E],
+          %w[F A C],
+          %w[A C Eb],
+          %w[F# A C]
+        )
+      end
+    end
+
+    context 'when two notes that do not form a chord (according to the engine)' do
+      let(:notes) { %w[A B] }
+
+      it 'returns no chords' do
+        expect(chord).to eq([])
+      end
+    end
+  end
 end

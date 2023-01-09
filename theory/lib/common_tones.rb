@@ -71,4 +71,12 @@ module EngineV1
 
     enharmonically_equivalent_notes(chord, other_chord)
   end
+
+  def pivot_chords(notes)
+    all_chords = NOTE_MINOR2_UP.keys.flat_map do |note|
+      QUALITIES.map { |quality| triad(note, quality) }
+    end
+
+    all_chords.select { |chord| notes.all? { |note| chord.include?(note) } }
+  end
 end
