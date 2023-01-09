@@ -54,12 +54,12 @@ module EngineV1
   end
 
   def enharmonically_equivalent_notes(chord, other_chord)
-    enharmonically_simplified_other_chord =
-      other_chord.map { |note| ENHARMONICALLY_SIMPLIFIED[note] || note }
+    enharmonic_other_chord =
+      other_chord.map { |note| ENHARMONIC[note] }
 
     chord.select do |note|
       other_chord.include?(note) ||
-        enharmonically_simplified_other_chord.include?(note)
+        enharmonic_other_chord.include?(note)
     end
   end
 
@@ -72,11 +72,52 @@ module EngineV1
     enharmonically_equivalent_notes(chord, other_chord)
   end
 
+  def accidental?(note)
+    note.include?('b') || note.include?('#')
+  end
+
+  def simpler_enharmonic?(note:, other_note:)
+    note.scan(/b|#/).count < other_note.scan(/b|#/).count
+  end
+
+  def enharmonic_chord(chord)
+    chord.map { |note| ENHARMONIC[note] }
+  end
+
+  def chord_includes_note?(chord, note)
+    (chord + enharmonic_chord(chord)).include?(note)
+  end
+
+  def filtered_with_enharmonic_preference_for_requested_notes(chords:, target_notes:)
+    chords.reject do |chord|
+      enharmonic_chord = enharmonic_chord(chord)
+
+      next unless chords.include?(enharmonic_chord)
+
+      target_note_count_in_chord =
+        chord.count { |note| target_notes.include?(note) }
+      target_note_count_in_enharmonic_chord =
+        enharmonic_chord.count { |note| target_notes.include?(note) }
+
+      target_note_count_in_enharmonic_chord > target_note_count_in_chord
+    end
+  end
+
   def pivot_chords(notes)
     all_chords = NOTE_MINOR2_UP.keys.flat_map do |note|
-      QUALITIES.map { |quality| triad(note, quality) }
+      chords = QUALITIES.map { |quality| triad(note, quality) }
+      if accidental?(note) && simpler_enharmonic?(note: ENHARMONIC[note], other_note: note)
+        chords + QUALITIES.map { |quality| triad(ENHARMONIC[note], quality) }
+      else
+        chords
+      end
     end
 
-    all_chords.select { |chord| notes.all? { |note| chord.include?(note) } }
+    matching_chords = all_chords.select { |chord| notes.all? { |note| chord_includes_note?(chord, note) } }
+
+    filtered_with_enharmonic_preference_for_requested_notes(
+      chords: matching_chords,
+      target_notes: notes
+    )
   end
 end

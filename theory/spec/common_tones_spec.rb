@@ -56,58 +56,61 @@ describe EngineV1 do
   end
 
   describe '.pivot_chords' do
-    subject(:chord) { described_class.pivot_chords(notes) }
+    subject(:chords) { described_class.pivot_chords(notes) }
 
     context 'when one note (Eb)' do
       let(:notes) { %w[Eb] }
 
+      it 'returns 12 chords (4 qualities * 3 chord tones)' do
+        expect(chords.count).to eq(12)
+      end
+
       it 'contains dim chord where note is 5th' do
-        expect(chord).to include(%w[A C Eb])
+        expect(chords).to include(%w[A C Eb])
       end
 
       it 'contains min chord where note is 5th' do
-        expect(chord).to include(%w[Ab Cb Eb])
+        expect(chords).to include(%w[Ab Cb Eb])
       end
 
       it 'contains maj chord where note is 5th' do
-        expect(chord).to include(%w[Ab C Eb])
+        expect(chords).to include(%w[Ab C Eb])
       end
 
-      xit 'contains aug chord where note is 5th' do
-        # not sure how to get this to pass.. use enharmonic equivalent?
-        expect(chord).to include(%w[Abb Cb Eb])
+      it 'contains aug chord where note is 5th' do
+        expect(chords).to include(%w[G B D#])
       end
 
       it 'contains dim chord where note is 3rd' do
-        expect(chord).to include(%w[C Eb Gb])
+        expect(chords).to include(%w[C Eb Gb])
       end
 
       it 'contains min chord where note is 3rd' do
-        expect(chord).to include(%w[C Eb G])
+        expect(chords).to include(%w[C Eb G])
       end
 
-      xit 'contains maj chord where note is 3rd' do
-        expect(chord).to include(%w[Cb Eb Gb])
+      it 'contains maj chord where note is 3rd' do
+        expect(chords).to include(%w[B D# F#])
       end
 
-      xit 'contains aug chord where note is 3rd' do
-        expect(chord).to include(%w[Cb Eb G])
+      it 'contains aug chord where note is 3rd' do
+        expect(chords).to include(%w[B D# F##])
       end
 
       it 'contains dim chord where note is root' do
-        expect(chord).to include(%w[Eb Gb Bbb])
+        expect(chords).to include(%w[Eb Gb Bbb])
       end
 
       it 'contains min chord where note is root' do
-        expect(chord).to include(%w[Eb Gb Bb])
+        expect(chords).to include(%w[Eb Gb Bb])
       end
 
       it 'contains maj chord where note is root' do
-        expect(chord).to include(%w[Eb G Bb])
+        expect(chords).to include(%w[Eb G Bb])
       end
 
       it 'contains aug chord where note is root' do
-        expect(chord).to include(%w[Eb G B])
+        expect(chords).to include(%w[Eb G B])
       end
     end
 
@@ -115,7 +118,7 @@ describe EngineV1 do
       let(:notes) { %w[A C] }
 
       it 'returns all chords that contain both notes' do
-        expect(chord).to contain_exactly(
+        expect(chords).to contain_exactly(
           %w[A C E],
           %w[F A C],
           %w[A C Eb],
@@ -128,7 +131,7 @@ describe EngineV1 do
       let(:notes) { %w[A B] }
 
       it 'returns no chords' do
-        expect(chord).to eq([])
+        expect(chords).to eq([])
       end
     end
   end

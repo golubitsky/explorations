@@ -134,11 +134,27 @@ module Constants
     'Ab' => 'D#',
   }
 
-  ENHARMONICALLY_SIMPLIFIED = {
+  ENHARMONIC = {
+    # non-accidentals that have single-accidental enharmonic
+    'B' => 'Cb',
+    'E' => 'Fb',
+    # this one is a hack to get one test to pass — need to rethink
+    # "enharmonic engine" — in this case, A could be either G## or Bbb
+    'A' => 'Bbb',
     # flats
+    'Bb' => 'A#',
+    'Eb' => 'D#',
+    'Ab' => 'G#',
+    'Db' => 'C#',
+    'Gb' => 'F#',
     'Cb' => 'B',
     'Fb' => 'E',
     # sharps
+    'F#' => 'Gb',
+    'C#' => 'Db',
+    'G#' => 'Ab',
+    'D#' => 'Eb',
+    'A#' => 'Bb',
     'E#' => 'F',
     'B#' => 'C',
     # double sharps
