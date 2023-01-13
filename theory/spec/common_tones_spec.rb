@@ -116,14 +116,17 @@ describe EngineV1 do
 
     context 'when two notes' do
       let(:notes) { %w[A C] }
-
-      it 'returns all chords that contain both notes' do
-        expect(chords).to contain_exactly(
+      let(:expected_chords) do
+        [
           %w[A C E],
           %w[F A C],
           %w[A C Eb],
-          %w[F# A C]
-        )
+          %w[F# A C],
+        ]
+      end
+
+      it 'returns all chords that contain both notes' do
+        expect(chords).to contain_exactly(*expected_chords)
       end
     end
 
