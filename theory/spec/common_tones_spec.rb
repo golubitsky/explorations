@@ -139,3 +139,52 @@ describe EngineV1 do
     end
   end
 end
+
+describe AdjacentChords do
+  describe '.adjacent_chords' do
+    subject(:chords) do
+      described_class.adjacent_chords(chord, semitone_freedom: semitone_freedom)
+    end
+
+    let(:chord) { %w[A C# E] }
+
+    context 'when no semitone freedom' do
+      let(:semitone_freedom) { 0 }
+
+      it 'returns no chords because no other chord is possible' do
+        expect(chords).to eq([])
+      end
+    end
+
+    context 'when allowed one degree of semitone freedom' do
+      let(:semitone_freedom) { 1 }
+
+      [
+        %w[Ab C# E],
+        %w[A# C# E],
+      ].each do |chord|
+        it "returns #{chord} with moved root" do
+          expect(chords).to include(chord)
+        end
+      end
+
+      [
+        %w[A D E],
+        %w[A C E],
+      ].each do |chord|
+        it "returns #{chord} with moved third" do
+          expect(chords).to include(chord)
+        end
+      end
+
+      [
+        %w[A C# F],
+        %w[A C# Eb],
+      ].each do |chord|
+        it "returns #{chord} with moved fifth" do
+          expect(chords).to include(chord)
+        end
+      end
+    end
+  end
+end

@@ -2,7 +2,7 @@
 
 require 'set'
 require 'constants'
-
+require 'engine_v2'
 module EngineV1
   include Constants
   extend self
@@ -119,5 +119,31 @@ module EngineV1
       chords: matching_chords,
       target_notes: notes
     )
+  end
+end
+
+module AdjacentChords
+  include Constants
+  extend self
+
+  def adjacent_chords(chord, semitone_freedom:)
+    return [] if semitone_freedom.zero?
+
+    [0, 1, 2].flat_map do |chord_tone_index|
+      [
+        chord.dup.tap { |c| c[chord_tone_index] = EngineV2.down(chord[chord_tone_index]) },
+        chord.dup.tap { |c| c[chord_tone_index] = EngineV2.up(chord[chord_tone_index]) },
+      ]
+    end
+  end
+
+  private
+
+  def note_up_semi(note)
+    NOTE_MINOR2_UP.fetch(note)
+  end
+
+  def note_down_semi(note)
+    NOTE_MINOR2_UP.invert.fetch(note)
   end
 end
