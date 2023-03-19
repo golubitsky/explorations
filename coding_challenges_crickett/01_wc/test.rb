@@ -10,7 +10,8 @@ module WordCountTests
       '-l test.txt',
       '-w test.txt',
       '-m test.txt',
-      'test.txt'
+      'test.txt',
+      'test.txt another.txt'
     ].each do |args_string|
       assert_equal(
         exec_real_wc_command(args_string),

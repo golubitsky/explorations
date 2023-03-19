@@ -16,7 +16,7 @@ def char_count(string)
   string.length
 end
 
-def result(option:, string:)
+def call_wc(option:, string:)
   case option
   when '-c'
     byte_count(string)
@@ -29,33 +29,58 @@ def result(option:, string:)
   end
 end
 
-def formatted(result)
-  result.to_s.rjust(8, ' ')
-end
-
 def result_when_option_specified
   file_name = ARGV[1]
+
   string = if file_name.nil?
              $stdin.read
            else
              File.read(file_name)
            end
 
-  result = formatted(result(option: ARGV[0], string: string))
-  file_name_when_present = file_name.nil? ? '' : " #{file_name}"
+  result = call_wc(option: ARGV[0], string: string)
 
-  "#{result}#{file_name_when_present}"
+  formatted_line(results: [result], text: file_name)
 end
 
-def result_when_only_file_name_specified
-  file_name = ARGV[0]
-  string = File.read(file_name)
+def formatted_line(results:, text:)
+  formatted_results = results
+                      .map { |result| result.to_s.rjust(8, ' ') }
+                      .join
 
-  c = formatted(result(option: '-c', string: string))
-  l = formatted(result(option: '-l', string: string))
-  w = formatted(result(option: '-w', string: string))
+  text_when_present = text.nil? ? '' : " #{text}"
 
-  "#{l}#{w}#{c} #{file_name}"
+  "#{formatted_results}#{text_when_present}"
+end
+
+def total(results)
+  totals = Array.new(results.first[:results].count, 0)
+
+  results.each do |result|
+    result[:results].each_with_index do |item, index|
+      totals[index] += item
+    end
+  end
+
+  { results: totals, text: 'total' }
+end
+
+def result_when_only_file_names_specified
+  file_names = ARGV
+
+  results = file_names.map do |file_name|
+    string = File.read(file_name)
+
+    c = call_wc(option: '-c', string: string)
+    l = call_wc(option: '-l', string: string)
+    w = call_wc(option: '-w', string: string)
+
+    { results: [l, w, c], text: file_name }
+  end
+
+  results.push(total(results)) if file_names.count > 1
+
+  results.map { |result| formatted_line(**result) }
 end
 
 if __FILE__ == $PROGRAM_NAME
@@ -63,6 +88,6 @@ if __FILE__ == $PROGRAM_NAME
   when /-/
     puts result_when_option_specified
   else
-    puts result_when_only_file_name_specified
+    puts result_when_only_file_names_specified
   end
 end
