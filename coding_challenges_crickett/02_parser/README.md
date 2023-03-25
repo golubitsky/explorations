@@ -15,5 +15,5 @@ bundle exec rspec
 ### Run program
 
 ```
-ruby parser.rb <filename>
+ruby parser.rb <file_name>
 ```

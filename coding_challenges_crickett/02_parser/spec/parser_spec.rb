@@ -23,7 +23,7 @@ RSpec.describe 'parsing JSON' do
     'spec/data/step4/valid.json',
     'spec/data/step4/valid2.json'
   ].each do |path_to_valid_file|
-    context 'when valid JSON' do
+    context "when valid JSON #{path_to_valid_file}" do
       let(:file_path) { path_to_valid_file }
 
       it 'prints to stdout that input is valid JSON' do
@@ -47,7 +47,7 @@ RSpec.describe 'parsing JSON' do
     'spec/data/step3/invalid.json',
     'spec/data/step4/invalid.json'
   ].each do |path_to_invalid_file|
-    context 'when invalid JSON' do
+    context "when invalid JSON #{path_to_invalid_file}" do
       let(:file_path) { path_to_invalid_file }
 
       it 'prints to stdout that input is invalid JSON' do
