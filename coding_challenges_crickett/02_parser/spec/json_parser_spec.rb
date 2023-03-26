@@ -4,9 +4,9 @@ require 'open3'
 
 require 'spec_helper'
 
-RSpec.describe 'parsing JSON' do
+RSpec.shared_examples 'parses JSON' do
   subject(:result) do
-    _stdin, stdout, stderr, wait_thr = Open3.popen3("ruby parser.rb #{file_path}")
+    _stdin, stdout, stderr, wait_thr = Open3.popen3(command)
 
     {
       stdout: stdout.read,
@@ -62,5 +62,19 @@ RSpec.describe 'parsing JSON' do
         expect(result[:exit_code]).to eq(1)
       end
     end
+  end
+end
+
+RSpec.describe 'parsing JSON' do
+  context 'when implemented in Ruby' do
+    let(:command) { "ruby json_parser.rb #{file_path}" }
+
+    include_examples 'parses JSON'
+  end
+
+  context 'when implemented in Python' do
+    let(:command) { "python3 json_parser.py #{file_path}" }
+
+    include_examples 'parses JSON'
   end
 end
