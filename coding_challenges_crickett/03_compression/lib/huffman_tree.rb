@@ -7,15 +7,15 @@ class HuffmanTree
     unused_nodes = leaf_nodes(frequency_table) # supposed to be a MinHeap
 
     until unused_nodes.length == 1
-      unused_nodes.sort_by!(&:frequency)
+      unused_nodes.sort_by! { |node| [node.frequency, node.letter] }
 
-      left_child = unused_nodes.shift
-      right_child = unused_nodes.shift
+      left = unused_nodes.shift
+      right = unused_nodes.shift
 
       internal_node = HuffmanNode.new(
-        frequency: left_child.frequency + right_child.frequency,
-        left_child: left_child,
-        right_child: right_child
+        frequency: left.frequency + right.frequency,
+        left: left,
+        right: right
       )
 
       unused_nodes << internal_node
@@ -37,13 +37,13 @@ class HuffmanTree
 end
 
 class HuffmanNode
-  attr_reader :frequency, :letter, :left_child, :right_child
+  attr_reader :frequency, :letter, :left, :right
 
   # internal nodes do not have letters
-  def initialize(frequency:, letter: nil, left_child: nil, right_child: nil)
+  def initialize(frequency:, letter: nil, left: nil, right: nil)
     @frequency = frequency
     @letter = letter
-    @left_child = left_child
-    @right_child = right_child
+    @left = left
+    @right = right
   end
 end
