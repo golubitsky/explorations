@@ -40,14 +40,12 @@ def decode(input_file_path, decoding_table_file_path)
 end
 
 if __FILE__ == $PROGRAM_NAME
-
   case ARGV[0]
   when '--encode'
     input_file_path = ARGV[1]
     encode(input_file_path)
   when '--decode'
     input_file_path, decoding_table_file_path = ARGV[1..2]
-
     decode(input_file_path, decoding_table_file_path)
   end
 end
