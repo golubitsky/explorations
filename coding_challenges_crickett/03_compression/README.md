@@ -40,10 +40,8 @@ decoded spec/data/135-0.txt-encoded to spec/data/135-0.txt-encoded-decoded
 $ diff spec/data/135-0.txt-encoded-decoded spec/data/135-0.txt
 
 # about 43% reduction in file size of Les Miserables test input
-$ ls -la spec/data
+$ ls -l spec/data
 total 16928
-drwxr-xr-x  6 mgolubitsky  staff      192 Apr  2 18:38 .
-drwxr-xr-x  7 mgolubitsky  staff      224 Apr  2 18:09 ..
 -rw-r--r--  1 mgolubitsky  staff  3369045 Jul 20  2021 135-0.txt
 -rw-r--r--  1 mgolubitsky  staff  1919764 Apr  2 18:37 135-0.txt-encoded
 -rw-r--r--  1 mgolubitsky  staff  3369045 Apr  2 18:38 135-0.txt-encoded-decoded
