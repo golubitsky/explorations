@@ -47,6 +47,10 @@ module HuffmanEncoding
   private
 
   def encoding(string, table)
+    if table.size > 128
+      raise 'encoding more than 128 unique characters is not supported'
+    end
+
     string.chars.map { |char| table[char] }.join
   end
 end
