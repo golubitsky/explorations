@@ -1,4 +1,4 @@
-# frozen_string_literal: true
+# frozen_string_literal: false
 
 require 'json'
 
@@ -14,45 +14,48 @@ module HuffmanEncoding
     tree = HuffmanTree.new(
       CharFrequency.char_frequency_table(string)
     )
-    # HACK: strip leading zeros and simplify representation of most common char
-    # this should be moved to the generation of the prefix_code_table
-    table = tree.prefix_code_table.transform_values do |bit_string|
-      bit_string.chars.uniq == ['0'] ? '0' : bit_string.sub(/^0*/, '')
+
+    if tree.prefix_code_table.size > 128
+      raise 'encoding more than 128 unique characters is not supported'
     end
+
+    table = tree.prefix_code_table
 
     {
       utf_8_json_decoding_table_hash_as_string: table.invert.to_s,
-      encoded_string: encoded_string(string, table)
+      binary_string: encoded_binary_string(string, table)
     }
   end
 
-  def decoded(utf_8_json_decoding_table_hash_as_string:, encoded_string:)
+  def decoded(utf_8_json_decoding_table_hash_as_string:, binary_string:)
     # TODO: remove security risk by storing the table in a better way
     decoding_table = eval(utf_8_json_decoding_table_hash_as_string)
-    unpacked = encoded_string.unpack(EIGHT_BIT_UNSIGNED_PACK_DIRECTIVE)
-    bit_strings = unpacked.map { |i| i.to_s(2) }
 
-    bit_strings.map { |bit_string| decoding_table[bit_string] }
-               .join
+    i = 0
+    j = 0
+
+    decoded = ''
+
+    while i < binary_string.length
+      window = binary_string[i..j]
+
+      if decoding_table[window]
+        decoded << decoding_table[window]
+        i = j + 1
+        j = i
+      else
+        j += 1
+      end
+    end
+
+    decoded
   end
 
   private
 
-  def binary_representation(bit_string:)
-    bit_string.to_i(2)
-  end
-
-  def bit_strings_to_be_packed(string, table)
-    string.chars.map { |char| table[char] }
-  end
-
-  def encoded_string(string, table)
-    if table.size > 128
-      raise 'encoding more than 128 unique characters is not supported'
-    end
-
-    bit_strings_to_be_packed(string, table)
-      .map { |bit_string| binary_representation(bit_string: bit_string) }
-      .pack(EIGHT_BIT_UNSIGNED_PACK_DIRECTIVE)
+  def encoded_binary_string(string, encoding_table)
+    string.chars
+          .map { |char| encoding_table[char] }
+          .join
   end
 end

@@ -4,7 +4,7 @@ require 'open3'
 
 require 'spec_helper'
 
-RSpec.describe 'compression' do
+RSpec.fdescribe 'compression' do
   let(:encode) do
     _stdin, stdout, stderr, wait_thr = Open3.popen3(encode_command)
 
