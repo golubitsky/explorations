@@ -31,6 +31,7 @@ RSpec.fdescribe HuffmanEncoding do
   end
 
   context 'when Les Miserables' do
+    # TODO: increase the char count and the test fails
     let(:string) { File.read('spec/data/135-0.txt')[0..99] }
 
     specify 'encoded + decoded == original' do
