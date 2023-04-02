@@ -5,8 +5,6 @@ require 'json'
 require_relative 'huffman_tree'
 require_relative 'char_frequency'
 
-EIGHT_BIT_UNSIGNED_PACK_DIRECTIVE = 'C*'
-
 module HuffmanEncoding
   extend self
 

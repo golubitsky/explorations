@@ -33,28 +33,14 @@ RSpec.describe HuffmanEncoding do
   end
 
   context 'when Les Miserables' do
-    context 'when first 101 chars' do
-      let(:string) { File.read('spec/data/135-0.txt') }
+    let(:string) { File.read('spec/data/135-0.txt') }
 
-      specify 'encoded + decoded == original' do
-        expect(decoded).to eq(string)
-      end
-
-      # TODO: I think this will get deleted. Compression will happen at outer layer.
-      # specify 'encoded string is compressed' do
-      #   encoded_bytesize = binary_string.bytesize
-      #   original_bytesize = string.bytesize
-
-      #   fail_message = 'expected encoded to be compressed: ' \
-      #                  "encoded is #{encoded_bytesize} bytes, " \
-      #                  "while input was #{original_bytesize} bytes"
-
-      #   expect(encoded_bytesize).to be < original_bytesize, fail_message
-      # end
+    specify 'encoded + decoded == original' do
+      expect(decoded).to eq(string)
     end
   end
 
-  describe 'unique character limits' do
+  describe 'unique character limits (TODO: not sure if this limit is needed anymore)' do
     context 'when 128 unique chars' do
       let(:string) { [*0..127].map(&:chr).join }
 
