@@ -1,3 +1,7 @@
+# frozen_string_literal: false
+
+require 'json'
+
 require_relative 'huffman_tree'
 require_relative 'char_frequency'
 
@@ -12,10 +16,13 @@ module HuffmanEncoding
     {
       decoding_table: tree.prefix_code_table.invert,
       encoded_string: encoding(string, tree.prefix_code_table)
-    }
+    }.to_json
   end
 
-  def decoded(encoded)
+  def decoded(encoded_json_input)
+    encoded = JSON.parse(encoded_json_input)
+                  .transform_keys(&:to_sym)
+
     left_index = 0
     right_index = 0
 

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 
 class HuffmanTree
   attr_reader :root, :prefix_code_table
@@ -31,7 +32,14 @@ class HuffmanTree
   end
 
   def extract_two_least_frequent_letters(nodes)
-    nodes.sort_by! { |node| [node.frequency, node.letter] }
+    nodes.sort_by! do |node|
+      [
+        node.frequency,
+        # node.letter: break ties when two chars occur with same frequency
+        # to_s: without it seeing error "comparison of Array with Array failed"
+        node.letter.to_s
+      ]
+    end
 
     nodes.shift(2)
   end

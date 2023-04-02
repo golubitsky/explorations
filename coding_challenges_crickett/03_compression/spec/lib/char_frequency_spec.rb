@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe CharFrequency do
   subject(:table) { CharFrequency.char_frequency_table(string) }
 

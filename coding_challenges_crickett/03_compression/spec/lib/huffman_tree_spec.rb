@@ -168,4 +168,13 @@ RSpec.describe HuffmanTree do
       expect(tree.prefix_code_table['f']).to eq('0')
     end
   end
+
+  describe 'integration test using Les Miserables text input' do
+    let(:string) { File.read('spec/data/135-0.txt') }
+    let(:frequency_table) { CharFrequency.char_frequency_table(string) }
+
+    it 'produces the tree' do
+      expect(tree).not_to be_nil
+    end
+  end
 end
