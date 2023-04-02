@@ -1,3 +1,4 @@
+
 class HuffmanTree
   attr_reader :root, :prefix_code_table
 

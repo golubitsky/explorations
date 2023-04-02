@@ -1,3 +1,6 @@
+require_relative 'huffman_tree'
+require_relative 'char_frequency'
+
 module HuffmanEncoding
   extend self
 
