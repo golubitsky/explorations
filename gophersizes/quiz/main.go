@@ -8,6 +8,7 @@ import (
 	"log"
 	"os"
 	"strings"
+	"time"
 )
 
 type problem struct {
@@ -21,6 +22,8 @@ func main() {
 	flag.StringVar(&filename, "f", "problems.csv", "Short form of filename flag.")
 	flag.Parse()
 
+	go startTimer()
+
 	problems := readProblems(filename)
 
 	score := 0
@@ -31,6 +34,22 @@ func main() {
 	}
 
 	fmt.Printf("You scored %d out of %d.", score, len(problems))
+}
+
+func startTimer() {
+	// Set the duration for the timer (10 seconds)
+	duration := 10 * time.Second
+
+	// Create a channel that will receive a signal after the specified duration
+	timerChan := time.After(duration)
+
+	fmt.Println("Timer started")
+
+	// Block until the timer channel receives a signal
+	<-timerChan
+
+	// Task to be performed after the timer expires
+	fmt.Println("Timer expired at", time.Now())
 }
 
 func waitForResponseAndScoreProblem(p problem, n int) bool {
