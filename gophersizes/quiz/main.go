@@ -8,6 +8,7 @@ import (
 	"log"
 	"os"
 	"strings"
+	"time"
 )
 
 type problem struct {
@@ -17,39 +18,52 @@ type problem struct {
 
 func main() {
 	var filename string
-	flag.StringVar(&filename, "filename", "problems.csv", "Specify the filename of the CSV source of problems.")
+	flag.StringVar(&filename, "filename", "problems.csv", "filename of the CSV source of problems (question,answer)")
 	flag.StringVar(&filename, "f", "problems.csv", "Short form of filename flag.")
+
+	timeLimit := flag.Int("limit", 30, "time limit in seconds")
+
 	flag.Parse()
 
 	lines := readCsv(filename)
 	problems := parseProblems(lines)
 
-	quiz(problems)
+	timer := time.NewTimer(time.Duration(*timeLimit) * time.Second)
+
+	quiz(problems, timer)
 }
 
-func quiz(problems []problem) {
+func quiz(problems []problem, t *time.Timer) {
 	score := 0
+
+problemLoop:
 	for i, p := range problems {
-		if waitForResponseAndScoreProblem(p, i+1) {
-			score += 1
+		fmt.Printf("Problem #%d: %s =", i+1, p.Question)
+
+		answerCh := make(chan string)
+
+		go func() {
+			reader := bufio.NewReader(os.Stdin)
+			input, err := reader.ReadString('\n')
+			if err != nil {
+				log.Fatal("An error occurred while reading input: ", err)
+			}
+
+			answerCh <- strings.TrimSuffix(input, "\n")
+		}()
+
+		select {
+		case <-t.C:
+			fmt.Println()
+			break problemLoop
+		case answer := <-answerCh:
+			if answer == p.Answer {
+				score += 1
+			}
 		}
 	}
 
 	fmt.Printf("You scored %d out of %d.", score, len(problems))
-}
-
-func waitForResponseAndScoreProblem(p problem, n int) bool {
-	fmt.Print("Problem #", n, ": ", p.Question, " = ")
-	reader := bufio.NewReader(os.Stdin)
-	// ReadString will block until the delimiter is entered
-	input, err := reader.ReadString('\n')
-	if err != nil {
-		log.Fatal("An error occurred while reading input: ", err)
-	}
-
-	input = strings.TrimSuffix(input, "\n")
-
-	return input == p.Answer
 }
 
 func readCsv(filename string) [][]string {
