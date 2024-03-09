@@ -21,7 +21,8 @@ func main() {
 	flag.StringVar(&filename, "f", "problems.csv", "Short form of filename flag.")
 	flag.Parse()
 
-	problems := readProblems(filename)
+	lines := readCsv(filename)
+	problems := parseProblems(lines)
 
 	quiz(problems)
 }
@@ -50,7 +51,8 @@ func waitForResponseAndScoreProblem(p problem, n int) bool {
 
 	return input == p.Answer
 }
-func readProblems(filename string) []problem {
+
+func readCsv(filename string) [][]string {
 	file, err := os.Open(filename)
 
 	if err != nil {
@@ -61,15 +63,19 @@ func readProblems(filename string) []problem {
 
 	reader := csv.NewReader(file)
 
-	records, err := reader.ReadAll()
+	lines, err := reader.ReadAll()
 
 	if err != nil {
 		log.Fatal("Cannot read rows in ", filename, ": ", err)
 	}
 
-	problems := make([]problem, len(records))
+	return lines
+}
 
-	for i, r := range records {
+func parseProblems(lines [][]string) []problem {
+	problems := make([]problem, len(lines))
+
+	for i, r := range lines {
 		problems[i] = problem{
 			Question: r[0],
 			Answer:   r[1],
