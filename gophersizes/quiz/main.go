@@ -54,7 +54,7 @@ func quiz(problems []problem, t *time.Timer) {
 
 problemLoop:
 	for i, p := range problems {
-		fmt.Printf("Problem #%d: %s =", i+1, p.Question)
+		fmt.Printf("Problem #%d: %s = ", i+1, p.Question)
 
 		answerCh := make(chan string)
 
