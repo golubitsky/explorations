@@ -8,11 +8,13 @@ def ask_question(problem, index)
 end
 
 def quiz(problems)
-  Thread.current[:result] = 0
+  result = 0
 
   problems.each_with_index do |problem, index|
-    Thread.current[:result] += 1 if ask_question(problem, index)
+    result += 1 if ask_question(problem, index)
   end
+ensure
+  puts "\nYou scored #{result} out of #{problems.count}"
 end
 
 def timer(seconds)
@@ -29,7 +31,5 @@ end
 quiz_thread = Thread.new { quiz(problems) }
 
 timer(5)
-
-puts "\nYou scored #{quiz_thread[:result]} out of #{problems.count}"
 
 quiz_thread.kill
