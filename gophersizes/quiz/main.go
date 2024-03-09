@@ -6,6 +6,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"math/rand"
 	"os"
 	"strings"
 	"time"
@@ -23,14 +24,29 @@ func main() {
 
 	timeLimit := flag.Int("limit", 30, "time limit in seconds")
 
+	shuffleFlag := flag.Bool("shuffle", false, "shuffle the problems")
+
 	flag.Parse()
 
 	lines := readCsv(filename)
 	problems := parseProblems(lines)
+	if *shuffleFlag {
+		shuffle(problems)
+	}
 
 	timer := time.NewTimer(time.Duration(*timeLimit) * time.Second)
 
 	quiz(problems, timer)
+}
+
+func shuffle(ps []problem) {
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+
+	// Fisher-Yates shuffle algorithm
+	for i := len(ps) - 1; i > 0; i-- {
+		j := r.Intn(i + 1)
+		ps[i], ps[j] = ps[j], ps[i]
+	}
 }
 
 func quiz(problems []problem, t *time.Timer) {
