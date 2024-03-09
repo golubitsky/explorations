@@ -67,14 +67,13 @@ func readProblems(filename string) []problem {
 		log.Fatal("Cannot read rows in ", filename, ": ", err)
 	}
 
-	problems := []problem{}
+	problems := make([]problem, len(records))
 
-	for _, r := range records {
-		problem := problem{
+	for i, r := range records {
+		problems[i] = problem{
 			Question: r[0],
 			Answer:   r[1],
 		}
-		problems = append(problems, problem)
 	}
 
 	return problems
