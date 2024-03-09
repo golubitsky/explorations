@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"encoding/csv"
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -15,7 +16,11 @@ type problem struct {
 }
 
 func main() {
-	filename := "problems.csv"
+	var filename string
+	flag.StringVar(&filename, "filename", "problems.csv", "Specify the filename of the CSV source of problems.")
+	flag.StringVar(&filename, "f", "problems.csv", "Short form of filename flag.")
+	flag.Parse()
+
 	problems := readProblems(filename)
 
 	score := 0
