@@ -1,0 +1,4 @@
+- path: /hello
+  url: https://test.com
+- path: /bye
+  url: https://anothertest.com
