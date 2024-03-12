@@ -41,6 +41,23 @@ type PathURL struct {
 	URL  string `yaml:"url"`
 }
 
+func parseYAML(yml []byte) ([]PathURL, error) {
+	var paths []PathURL
+
+	err := yaml.Unmarshal([]byte(yml), &paths)
+
+	return paths, err
+}
+
+func mapFromYAML(paths []PathURL) map[string]string {
+	pathMap := make(map[string]string)
+	for _, p := range paths {
+		pathMap[p.Path] = p.URL
+	}
+
+	return pathMap
+}
+
 // YAMLHandler will parse the provided YAML and then return
 // an http.HandlerFunc (which also implements http.Handler)
 // that will attempt to map any paths to their corresponding
@@ -58,17 +75,10 @@ type PathURL struct {
 // See MapHandler to create a similar http.HandlerFunc via
 // a mapping of paths to urls.
 func YAMLHandler(yml []byte, fallback http.Handler) (http.HandlerFunc, error) {
-	var paths []PathURL
-
-	err := yaml.Unmarshal([]byte(yml), &paths)
+	paths, err := parseYAML(yml)
 	if err != nil {
 		return nil, err
 	}
 
-	pathMap := make(map[string]string)
-	for _, p := range paths {
-		pathMap[p.Path] = p.URL
-	}
-
-	return MapHandler(pathMap, fallback), err
+	return MapHandler(mapFromYAML(paths), fallback), err
 }
