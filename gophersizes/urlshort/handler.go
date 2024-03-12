@@ -80,5 +80,5 @@ func YAMLHandler(yml []byte, fallback http.Handler) (http.HandlerFunc, error) {
 		return nil, err
 	}
 
-	return MapHandler(mapFromYAML(paths), fallback), err
+	return MapHandler(mapFromYAML(paths), fallback), nil
 }
