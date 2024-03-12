@@ -36,20 +36,25 @@ func MapHandler(pathsToUrls map[string]string, fallback http.Handler) http.Handl
 	return redirect.handlerFunc
 }
 
-type PathURL struct {
+type PathURLYAML struct {
 	Path string `yaml:"path"`
 	URL  string `yaml:"url"`
 }
 
-func parseYAML(yml []byte) ([]PathURL, error) {
-	var paths []PathURL
+type PathURLJSON struct {
+	Path string `json:"path"`
+	URL  string `json:"url"`
+}
+
+func parseYAML(yml []byte) ([]PathURLYAML, error) {
+	var paths []PathURLYAML
 
 	err := yaml.Unmarshal([]byte(yml), &paths)
 
 	return paths, err
 }
 
-func mapFromYAML(paths []PathURL) map[string]string {
+func mapFromYAML(paths []PathURLYAML) map[string]string {
 	pathMap := make(map[string]string)
 	for _, p := range paths {
 		pathMap[p.Path] = p.URL
@@ -81,4 +86,30 @@ func YAMLHandler(yml []byte, fallback http.Handler) (http.HandlerFunc, error) {
 	}
 
 	return MapHandler(mapFromYAML(paths), fallback), nil
+}
+
+func parseJSON(json []byte) ([]PathURLJSON, error) {
+	var paths []PathURLJSON
+
+	err := yaml.Unmarshal([]byte(json), &paths)
+
+	return paths, err
+}
+
+func mapFromJSON(paths []PathURLJSON) map[string]string {
+	pathMap := make(map[string]string)
+	for _, p := range paths {
+		pathMap[p.Path] = p.URL
+	}
+
+	return pathMap
+}
+
+func JSONHandler(json []byte, fallback http.Handler) (http.HandlerFunc, error) {
+	paths, err := parseJSON(json)
+	if err != nil {
+		return nil, err
+	}
+
+	return MapHandler(mapFromJSON(paths), fallback), nil
 }

@@ -1,0 +1,10 @@
+[
+  {
+    "path": "/json",
+    "url": "http://awesome.com"
+  },
+  {
+    "path": "/json2",
+    "url": "http://awesome2.com"
+  }
+]

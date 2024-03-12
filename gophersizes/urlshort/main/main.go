@@ -12,6 +12,7 @@ import (
 
 func main() {
 	yamlFile := flag.String("yaml", "", "YAML filename with list of redirects")
+	jsonFile := flag.String("json", "", "JSON filename with list of redirects")
 	flag.Parse()
 
 	mux := defaultMux()
@@ -45,8 +46,26 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	var handler = yamlHandler
+
+	if *jsonFile != "" {
+		json, err := os.ReadFile(*jsonFile)
+		if err != nil {
+			log.Fatal("cannot open ", *jsonFile)
+		}
+
+		jsonHandler, err := urlshort.JSONHandler(json, yamlHandler)
+
+		if err != nil {
+			log.Fatal("cannot create JSON handler", err)
+		}
+
+		handler = jsonHandler
+	}
+
 	fmt.Println("Starting the server on :8080")
-	http.ListenAndServe(":8080", yamlHandler)
+	http.ListenAndServe(":8080", handler)
 }
 
 func defaultMux() *http.ServeMux {

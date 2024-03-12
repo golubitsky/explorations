@@ -1,4 +1,4 @@
-- path: /hello
+- path: /yaml
   url: https://test.com
-- path: /bye
+- path: /yaml2
   url: https://anothertest.com
