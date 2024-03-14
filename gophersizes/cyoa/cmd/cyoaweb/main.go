@@ -1,13 +1,11 @@
 package main
 
 import (
-	"encoding/json"
+	"cyoa"
 	"flag"
 	"fmt"
 	"log"
 	"os"
-
-	"cyoa"
 )
 
 func main() {
@@ -20,14 +18,7 @@ func main() {
 		log.Fatal("can't open file", *filename, err)
 	}
 
-	d := json.NewDecoder(f)
-	story := make(cyoa.Story)
-
-	decodeErr := d.Decode(&story)
-
-	if decodeErr != nil {
-		log.Fatal("can't decode JSON", decodeErr)
-	}
+	story, err := cyoa.StoryFromJson(f)
 
 	fmt.Printf("%+v\n", story)
 }
