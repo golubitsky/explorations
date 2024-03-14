@@ -14,15 +14,16 @@ func main() {
 	filename := flag.String("filename", "gopher.json", "filename of JSON file with CYOA story")
 	flag.Parse()
 
-	f, err := os.ReadFile(*filename)
+	f, err := os.Open(*filename)
 
 	if err != nil {
 		log.Fatal("can't open file", *filename, err)
 	}
 
+	d := json.NewDecoder(f)
 	story := make(cyoa.Story)
 
-	decodeErr := json.Unmarshal(f, &story)
+	decodeErr := d.Decode(&story)
 
 	if decodeErr != nil {
 		log.Fatal("can't decode JSON", decodeErr)
