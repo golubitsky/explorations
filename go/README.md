@@ -1,3 +1,1 @@
-https://go.dev/doc/faq
-https://pkg.go.dev/builtin
-https://pkg.go.dev/std
+A collection of Go patterns/learnings/snippets.
