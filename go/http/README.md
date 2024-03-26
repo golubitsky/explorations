@@ -11,3 +11,9 @@ Restart server on change:
 ```
 gow run .
 ```
+
+## Test
+
+```
+go test .
+```
