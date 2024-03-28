@@ -6,8 +6,9 @@ import (
 )
 
 func handlerFunc(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
-	fmt.Fprint(w, "<h1>Hello, World</h1>")
+	fmt.Fprint(w, "{\"hello\":\"world\"}")
 }
 func main() {
 	http.HandleFunc("/", handlerFunc)
