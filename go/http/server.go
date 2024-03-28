@@ -17,11 +17,6 @@ func contactHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, "<h1>Contact Page</h1>")
 }
 
-func notFoundHandler(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusNotFound)
-	fmt.Fprint(w, "<h1>Page not found</h1>")
-}
-
 func pathHandler(w http.ResponseWriter, r *http.Request) {
 	log := strings.Join([]string{"Processing", r.Method, r.URL.Path}, " ")
 	fmt.Println(log)
@@ -32,7 +27,7 @@ func pathHandler(w http.ResponseWriter, r *http.Request) {
 	case "/contact":
 		contactHandler(w, r)
 	default:
-		notFoundHandler(w, r)
+		http.Error(w, "Page not found", http.StatusNotFound)
 	}
 }
 
