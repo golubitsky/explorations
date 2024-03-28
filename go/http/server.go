@@ -26,11 +26,12 @@ func pathHandler(w http.ResponseWriter, r *http.Request) {
 	log := strings.Join([]string{"Processing", r.Method, r.URL.Path}, " ")
 	fmt.Println(log)
 
-	if r.URL.Path == "/" {
+	switch r.URL.Path {
+	case "/":
 		homeHandler(w, r)
-	} else if r.URL.Path == "/contact" {
+	case "/contact":
 		contactHandler(w, r)
-	} else {
+	default:
 		notFoundHandler(w, r)
 	}
 }
