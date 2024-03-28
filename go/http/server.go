@@ -8,7 +8,7 @@ import (
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(200)
+	w.WriteHeader(http.StatusOK)
 	fmt.Fprint(w, "{\"hello\":\"world\"}")
 }
 
@@ -18,7 +18,7 @@ func contactHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func notFoundHandler(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(404)
+	w.WriteHeader(http.StatusNotFound)
 	fmt.Fprint(w, "<h1>Page not found</h1>")
 }
 
