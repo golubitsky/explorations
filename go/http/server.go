@@ -39,6 +39,13 @@ func main() {
 	r.Get("/", homeHandler)
 	r.Get("/contact", contactHandler)
 	r.Get("/faq", faqHandler)
+	r.Route("/users", func(r chi.Router) {
+		r.Get("/{userId}", func(w http.ResponseWriter, r *http.Request) {
+			userId := chi.URLParam(r, "userId")
+			fmt.Fprint(w, "fetching user ", userId)
+		})
+	})
+
 	r.NotFound(func(w http.ResponseWriter, r *http.Request) {
 		logRequest(r)
 
