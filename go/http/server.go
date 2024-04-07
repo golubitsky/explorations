@@ -17,6 +17,11 @@ func contactHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, "<h1>Contact Page</h1>")
 }
 
+func faqHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	fmt.Fprint(w, "<h1>Faq Page</h1>")
+}
+
 type Router struct{}
 
 func (router Router) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -28,6 +33,8 @@ func (router Router) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		homeHandler(w, r)
 	case "/contact":
 		contactHandler(w, r)
+	case "/faq":
+		faqHandler(w, r)
 	default:
 		http.Error(w, "Page not found", http.StatusNotFound)
 	}
