@@ -8,18 +8,20 @@ def prompt_text():
     return f"ccsh {os.path.basename(os.getcwd())} > "
 
 
-def exception_handling(function):
+def command_exception_handling(function):
     @wraps(function)
     def wrapper(*args):
         try:
             function(*args)
         except Exception as e:
             print(e)
+        except KeyboardInterrupt:
+            pass
 
     return wrapper
 
 
-@exception_handling
+@command_exception_handling
 def execute(command):
     if "|" in command:
         stdin = None
@@ -34,7 +36,7 @@ def execute(command):
         subprocess.run(command.split())
 
 
-@exception_handling
+@command_exception_handling
 def cd(command):
     cmd = command.split()
 
@@ -48,14 +50,17 @@ def cd(command):
 
 def start_shell():
     while True:
-        command = input(prompt_text())
+        try:
+            command = input(prompt_text())
 
-        if command == "exit":
-            exit()
-        elif command.startswith("cd"):
-            cd(command)
-        else:
-            execute(command)
+            if command == "exit":
+                exit()
+            elif command.startswith("cd"):
+                cd(command)
+            else:
+                execute(command)
+        except KeyboardInterrupt:
+            print("")
 
 
 if __name__ == "__main__":
