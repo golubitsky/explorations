@@ -11,7 +11,7 @@ def start_shell():
             exit()
 
         try:
-            subprocess.run(command, check=True)
+            subprocess.run(command.split(), check=True)
         except Exception as e:
             print(e)
 
