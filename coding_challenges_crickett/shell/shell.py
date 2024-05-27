@@ -63,7 +63,7 @@ def prompt(history):
         if command.startswith("cd"):
             cd(command)
         elif command == "history":
-            history.to_stdout()
+            print(history)
         elif command == "exit":
             exit()
         else:
