@@ -1,7 +1,33 @@
 import subprocess
 import os
+import atexit
 
 from functools import wraps
+from pathlib import Path
+
+
+class History:
+    FILEPATH = Path.home() / ".ccsh_history"
+
+    def __init__(self):
+        self._items = self._load_from_disk()
+
+    def append(self, command):
+        self._items.append(command)
+
+    def to_stdout(self):
+        print("\n".join(self._items))
+
+    def save_to_disk(self):
+        with open(History.FILEPATH, "w") as f:
+            f.write("\n".join(self._items))
+
+    def _load_from_disk(self):
+        try:
+            with open(History.FILEPATH) as f:
+                return f.read().splitlines()
+        except FileNotFoundError:
+            return []
 
 
 def prompt_text():
@@ -48,14 +74,21 @@ def cd(command):
     os.chdir(os.path.join(os.getcwd(), target))
 
 
-def prompt():
+def prompt(history):
     try:
-        command = input(prompt_text())
+        command = input(prompt_text()).rstrip()
+
+        if not command:
+            return
+
+        history.append(command)
 
         if command == "exit":
             exit()
         elif command.startswith("cd"):
             cd(command)
+        elif command == "history":
+            history.to_stdout()
         else:
             execute(command)
     except KeyboardInterrupt:
@@ -63,5 +96,8 @@ def prompt():
 
 
 if __name__ == "__main__":
+    history = History()
+    atexit.register(lambda: history.save_to_disk())
+
     while True:
-        prompt()
+        prompt(history)
