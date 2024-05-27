@@ -8,9 +8,30 @@ def prompt_text():
     return f"ccsh {os.path.basename(os.getcwd())} > "
 
 
+def exception_handling(function):
+    @wraps(function)
+    def wrapper(*args):
+        try:
+            function(*args)
+        except Exception as e:
+            print(e)
+
+    return wrapper
+
+
 @exception_handling
 def execute(command):
-    subprocess.run(command.split())
+    if "|" in command:
+        stdin = None
+        for command in command.split("|"):
+            completed_process = subprocess.run(
+                command.split(), input=stdin, stdout=subprocess.PIPE
+            )
+            stdin = completed_process.stdout
+
+        print(completed_process.stdout.decode("utf-8"))
+    else:
+        subprocess.run(command.split())
 
 
 @exception_handling
@@ -23,17 +44,6 @@ def cd(command):
     target = cmd[1]
 
     os.chdir(os.path.join(os.getcwd(), target))
-
-
-def exception_handling(function):
-    @wraps(function)
-    def wrapper(*args):
-        try:
-            function(*args)
-        except Exception as e:
-            print(e)
-
-    return wrapper
 
 
 def start_shell():
