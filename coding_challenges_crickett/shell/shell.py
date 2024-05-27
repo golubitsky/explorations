@@ -7,9 +7,8 @@ from pathlib import Path
 
 
 class History:
-    FILEPATH = Path.home() / ".ccsh_history"
-
-    def __init__(self):
+    def __init__(self, filepath):
+        self._filepath = filepath
         self._items = self._load_from_disk()
 
     def append(self, command):
@@ -19,12 +18,12 @@ class History:
         print("\n".join(self._items))
 
     def save_to_disk(self):
-        with open(History.FILEPATH, "w") as f:
+        with open(self._filepath, "w") as f:
             f.write("\n".join(self._items))
 
     def _load_from_disk(self):
         try:
-            with open(History.FILEPATH) as f:
+            with open(self._filepath) as f:
                 return f.read().splitlines()
         except FileNotFoundError:
             return []
@@ -96,7 +95,8 @@ def prompt(history):
 
 
 if __name__ == "__main__":
-    history = History()
+    history_filepath = Path.home() / ".ccsh_history"
+    history = History(history_filepath)
     atexit.register(lambda: history.save_to_disk())
 
     while True:
