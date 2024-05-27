@@ -10,7 +10,10 @@ def start_shell():
         if command == "exit":
             exit()
 
-        subprocess.run(command)
+        try:
+            subprocess.run(command, check=True)
+        except Exception as e:
+            print(e)
 
 
 if __name__ == "__main__":
