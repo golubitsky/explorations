@@ -48,20 +48,20 @@ def cd(command):
     os.chdir(os.path.join(os.getcwd(), target))
 
 
-def start_shell():
-    while True:
-        try:
-            command = input(prompt_text())
+def prompt():
+    try:
+        command = input(prompt_text())
 
-            if command == "exit":
-                exit()
-            elif command.startswith("cd"):
-                cd(command)
-            else:
-                execute(command)
-        except KeyboardInterrupt:
-            print("")
+        if command == "exit":
+            exit()
+        elif command.startswith("cd"):
+            cd(command)
+        else:
+            execute(command)
+    except KeyboardInterrupt:
+        print("")
 
 
 if __name__ == "__main__":
-    start_shell()
+    while True:
+        prompt()
