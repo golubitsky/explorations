@@ -3,7 +3,9 @@ import os
 
 from functools import wraps
 
-PROMPT = "ccsh> "
+
+def prompt_text():
+    return f"ccsh {os.path.basename(os.getcwd())} > "
 
 
 def exception_handling(function):
@@ -36,7 +38,7 @@ def cd(command):
 
 def start_shell():
     while True:
-        command = input(PROMPT)
+        command = input(prompt_text())
 
         if command == "exit":
             exit()
