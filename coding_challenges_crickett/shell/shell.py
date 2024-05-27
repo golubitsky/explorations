@@ -4,9 +4,13 @@ PROMPT = "ccsh> "
 
 
 def start_shell():
-    command = input(PROMPT)
+    while True:
+        command = input(PROMPT)
 
-    subprocess.run(command)
+        if command == "exit":
+            exit()
+
+        subprocess.run(command)
 
 
 if __name__ == "__main__":
