@@ -51,7 +51,7 @@ def cd(command):
     os.chdir(os.path.join(os.getcwd(), target))
 
 
-def prompt(history):
+def run_shell(history):
     try:
         command = input(prompt_text()).rstrip()
 
@@ -78,4 +78,4 @@ if __name__ == "__main__":
     atexit.register(lambda: history.save_to_disk())
 
     while True:
-        prompt(history)
+        run_shell(history)
