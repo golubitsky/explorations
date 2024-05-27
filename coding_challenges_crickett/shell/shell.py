@@ -83,12 +83,12 @@ def prompt(history):
 
         history.append(command)
 
-        if command == "exit":
-            exit()
-        elif command.startswith("cd"):
+        if command.startswith("cd"):
             cd(command)
         elif command == "history":
             history.to_stdout()
+        elif command == "exit":
+            exit()
         else:
             execute(command)
     except KeyboardInterrupt:
