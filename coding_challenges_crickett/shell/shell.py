@@ -19,26 +19,28 @@ def exception_handling(function):
 
 @exception_handling
 def execute(command):
-    subprocess.run(command)
+    subprocess.run(command.split())
 
 
 @exception_handling
 def cd(command):
-    if len(command) == 1:
+    cmd = command.split()
+
+    if len(cmd) == 1:
         return
 
-    target = command[1]
+    target = cmd[1]
 
     os.chdir(os.path.join(os.getcwd(), target))
 
 
 def start_shell():
     while True:
-        command = input(PROMPT).split()
+        command = input(PROMPT)
 
-        if command[0] == "exit":
+        if command == "exit":
             exit()
-        elif command[0] == "cd":
+        elif command.startswith("cd"):
             cd(command)
         else:
             execute(command)
