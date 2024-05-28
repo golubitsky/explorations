@@ -52,7 +52,11 @@ def cd(command):
 
 
 def run_history(command):
-    print(history)
+    split = command.split()
+    if len(split) == 1:
+        print(history)
+    else:
+        print(history)
 
 
 def run_shell(history):
