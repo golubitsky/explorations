@@ -51,6 +51,10 @@ def cd(command):
     os.chdir(os.path.join(os.getcwd(), target))
 
 
+def run_history(command):
+    print(history)
+
+
 def run_shell(history):
     try:
         command = input(prompt_text()).rstrip()
@@ -60,8 +64,8 @@ def run_shell(history):
 
         if command.startswith("cd"):
             cd(command)
-        elif command == "history":
-            print(history)
+        elif command.startswith("history"):
+            run_history(command)
         elif command == "exit":
             exit()
         else:
