@@ -61,12 +61,12 @@ def cd(command):
 
 def execute_history_item(command, history):
     value = command.split("!")[-1]
-    if value.isnumeric():
-        history_command = history.get_item(int(value))
-        print(history_command)
-        execute(history_command, history)
-    else:
+    if not value.isnumeric():
         print(f"{command}: numeric argument required")
+
+    history_command = history.get_item(int(value))
+    print(history_command)
+    execute(history_command, history)
 
 
 def run_shell(history):
