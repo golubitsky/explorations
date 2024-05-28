@@ -24,5 +24,8 @@ class History:
             [single_item(i) for i in range(readline.get_current_history_length())]
         )
 
+    def get_item(self, index):
+        return readline.get_history_item(index)
+
     def save_to_disk(self):
         readline.write_history_file(self._filepath)

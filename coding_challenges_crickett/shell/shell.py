@@ -25,8 +25,16 @@ def command_exception_handling(function):
 
 
 @command_exception_handling
-def execute(command):
-    if "|" in command:
+def execute(command, history):
+    if command.startswith("cd"):
+        cd(command)
+    elif command.startswith("!"):
+        execute_history_item(command, history)
+    elif command == "history":
+        print(history)
+    elif command == "exit":
+        exit()
+    elif "|" in command:
         stdin = None
         for command in command.split("|"):
             completed_process = subprocess.run(
@@ -51,12 +59,14 @@ def cd(command):
     os.chdir(os.path.join(os.getcwd(), target))
 
 
-def run_history(command):
-    split = command.split()
-    if len(split) == 1:
-        print(history)
+def execute_history_item(command, history):
+    value = command.split("!")[-1]
+    if value.isnumeric():
+        history_command = history.get_item(int(value))
+        print(history_command)
+        execute(history_command, history)
     else:
-        print(history)
+        print(f"{command}: numeric argument required")
 
 
 def run_shell(history):
@@ -66,14 +76,7 @@ def run_shell(history):
         if not command:
             return
 
-        if command.startswith("cd"):
-            cd(command)
-        elif command.startswith("history"):
-            run_history(command)
-        elif command == "exit":
-            exit()
-        else:
-            execute(command)
+        execute(command, history)
     except KeyboardInterrupt:
         print("")
 
