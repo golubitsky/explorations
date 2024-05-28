@@ -1,21 +1,28 @@
+import readline
+
+
 class History:
     def __init__(self, filepath):
         self._filepath = filepath
-        self._items = self._load_from_disk()
+
+        try:
+            readline.read_history_file(self._filepath)
+        except FileNotFoundError:
+            pass
 
     def __str__(self):
-        return "\n".join(self._items)
+        print(readline.get_current_history_length())
 
-    def append(self, command):
-        self._items.append(command)
+        def single_item(i):
+            # readline uses 1-indexing
+            number = str((i + 1)).rjust(5)
+            command = readline.get_history_item(i + 1)
+
+            return "  ".join([number, command])
+
+        return "\n".join(
+            [single_item(i) for i in range(readline.get_current_history_length())]
+        )
 
     def save_to_disk(self):
-        with open(self._filepath, "w") as f:
-            f.write(self.__str__())
-
-    def _load_from_disk(self):
-        try:
-            with open(self._filepath) as f:
-                return f.read().splitlines()
-        except FileNotFoundError:
-            return []
+        readline.write_history_file(self._filepath)

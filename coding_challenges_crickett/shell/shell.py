@@ -58,8 +58,6 @@ def run_shell(history):
         if not command:
             return
 
-        history.append(command)
-
         if command.startswith("cd"):
             cd(command)
         elif command == "history":
