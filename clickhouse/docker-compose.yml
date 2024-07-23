@@ -11,6 +11,7 @@ services:
       - clickhouse-data:/var/lib/clickhouse
     environment:
       - CLICKHOUSE_USER=default
+      - CLICKHOUSE_PASSWORD=password
       - CLICKHOUSE_DB=default
       - CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT=1
     ulimits:
