@@ -1,3 +1,5 @@
+Following https://www.udemy.com/course/learn-clickhouse.
+
 ## Installation
 
 Spin up a Clickhouse server:
@@ -80,3 +82,102 @@ SELECT count(*) FROM sample_dataset.cell_towers;
 SELECT * FROM sample_dataset.cell_towers LIMIT 5;
 ```
 
+## Clickhouse SQL
+
+### DDL (Data Definition Language)
+
+CREATE [can be used](https://clickhouse.com/docs/en/sql-reference/statements/create) to create databases, users, roles, etc.
+
+RENAME can be used for databases, tables, and [dictionaries](https://clickhouse.com/docs/en/sql-reference/dictionaries).
+
+TRUNCATE, DROP
+
+### DQL (Query)
+
+### DML (Manipulation)
+
+INSERT, ALTER, UPDATE, DELETE
+
+Mutations [are costly](https://clickhouse.com/docs/en/optimize/avoid-mutations).
+
+UPDATE is used with ALTER:
+
+> The ALTER TABLE prefix makes this syntax different from most other systems supporting SQL. It is intended to signify that unlike similar queries in OLTP databases this is a heavy operation not designed for frequent use.
+
+`DELETE` without `ALTER` is a [lightweight delete](https://clickhouse.com/docs/en/guides/developer/lightweight-delete).
+
+### DCL (Control)
+
+GRANT, REVOKE
+
+### Views
+
+Views are based on another table and defined with a SQL query.
+
+Materialized views
+
+- can use a different engine from the underlying table.
+- only reflect INSERT operations; not UPDATE and DELETE.
+
+### Joins
+
+Joins use a hash merge by default.
+
+- Inner
+  - only records matching in both tables
+- Left
+  - all records from left table, including matching records from right table
+- Right
+  - all records from right table, including matching records from left table
+- Full
+  - all records from both tables are returned, with nulls where there are no matching records
+- Cross
+
+### Operators
+
+Essentially same as Postgres.
+Each operator has an equivalent function, e.g., "a + b" is equivalent to plus(a, b).
+
+- Mathematical
+  - +, -, \*, /, %
+- Comparison
+  - ==, != or <>, <, >, <=, >=, (not) like, a (not) between b and c
+- Logical
+  - NOT, AND, OR
+- Null
+  - IS (NOT) NULL
+
+### Data Types
+
+- Numeric
+  - integer (8-bit to 256-bit)
+    - signed
+    - unsigned
+  - float (32- and 64-bit)
+    - rounding errors
+  - decimal (32- through 256-bit)
+    - stores fractions with fixed decimal point
+    - up to: precision 39-75, scale 0-75
+    - when dividing, least significant digits are discarded (not rounded)
+  - infinity and nan
+    - infinity represented by `-1/0` and `1/0`
+    - nan represented by `0/0`
+  - boolean
+- String
+  - not automatically encoded; [some built-in functions assume UTF-8](https://clickhouse.com/docs/en/sql-reference/data-types/string#encodings)
+  - string (like VARCHAR)
+    - stored as bytes
+    - no fixed length
+  - fixed string (like CHAR)
+    - fixed length (in bytes)
+    - if length < max length
+      - null characters appended
+    - if length > max length
+      - exception
+- Date / Datetime
+- Array
+- Tuple
+- Nested
+- Enum
+- Low cardinality
+- Geo
