@@ -1,0 +1,5 @@
+Naming/MethodParameterName:
+  Enabled: false
+
+AllCops:
+  NewCops: enable
