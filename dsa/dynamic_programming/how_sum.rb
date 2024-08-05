@@ -1,19 +1,20 @@
 # frozen_string_literal: true
 
 def how_sum(target, integers, path_so_far = [], memo = {})
-  return memo[target] if memo.key?(target)
-
-  if target.zero?
+  if memo.key?(target)
+    return memo[target]
+  elsif target.zero?
     return path_so_far.any? ? path_so_far : false
+  elsif target.negative?
+    return false
   end
 
-  return false if target.negative?
-
   integers.each do |integer|
-    path = how_sum(target - integer, integers, path_so_far.dup.push(integer), memo)
+    next_target = target - integer
+    next_path = path_so_far.dup.push(integer)
+    path = how_sum(next_target, integers, next_path, memo)
 
-    memo[integer] = path
-    return memo[integer] if memo[integer]
+    return memo[target] = path if path
   end
 
   memo[target] = false
@@ -36,6 +37,7 @@ def test_how_sum
   p how_sum(1, [2, 3, 5]) # Small target with larger integers
   p how_sum(10, [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]) # Repeated integers
   p how_sum(100, [1, 2, 5, 25]) # Combination using repeated and large integers
+  p how_sum(122, [98, 24, 1]) # multiple combinations, unsorted
 end
 
 test_how_sum
