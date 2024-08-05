@@ -1,23 +1,21 @@
 # frozen_string_literal: true
 
-def how_sum(target, integers, path_so_far = [], memo = {})
-  if memo.key?(target)
-    return memo[target]
-  elsif target.zero?
-    return path_so_far
-  elsif target.negative?
-    return false
-  end
+def how_sum(target, integers, memo = {})
+  return memo[target] if memo.key?(target)
+  return [] if target.zero?
+  return nil if target.negative?
 
   integers.each do |integer|
     remainder = target - integer
-    next_path = path_so_far.dup.push(integer)
-    path = how_sum(remainder, integers, next_path, memo)
+    remainder_result = how_sum(remainder, integers, memo)
 
-    return memo[target] = path if path
+    unless remainder_result.nil?
+      memo[target] = remainder_result.push(integer)
+      return memo[target]
+    end
   end
 
-  memo[target] = false
+  memo[target] = nil
 end
 
 def test_how_sum
