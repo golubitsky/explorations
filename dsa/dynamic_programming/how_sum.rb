@@ -4,7 +4,7 @@ def how_sum(target, integers, path_so_far = [], memo = {})
   if memo.key?(target)
     return memo[target]
   elsif target.zero?
-    return path_so_far.any? ? path_so_far : false
+    return path_so_far
   elsif target.negative?
     return false
   end
@@ -41,3 +41,7 @@ def test_how_sum
 end
 
 test_how_sum
+
+p how_sum(8, [2, 3, 5])
+p how_sum(7, [2, 4])
+p how_sum(0, [2, 4])
