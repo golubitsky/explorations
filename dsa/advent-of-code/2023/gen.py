@@ -6,9 +6,9 @@ def create_files(n):
     n_str = n.zfill(2)
 
     # Define filenames
-    python_file = f"{n_str}.py"
-    input_file = f"{n_str}_input.txt"
-    sample_file = f"{n_str}_sample.txt"
+    python_file = f"day_{n_str}.py"
+    input_file = f"day_{n_str}_input.txt"
+    sample_file = f"day_{n_str}_sample.txt"
 
     # Create and write the Python file
     with open(python_file, "w") as py_file:
