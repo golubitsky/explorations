@@ -1,0 +1,25 @@
+- Choosing how many partitions
+  - too few
+    - low throughput
+    - increase in lag
+    - limits upper number of consumers; struggling consumers
+  - too many
+    - backups, upgrades, other admin operations are more expensive
+    - more potential consumer rebalances (reassignment of partition ownership by consumer)
+    - producers are slower at batching and distributing data, compression is less effective
+  - how to decide
+    - think how the data will be consumed
+      - throughput of consumers
+      - how many consumers needed in parallel
+- can number be changed later?
+  - impossible to decrease
+  - can add more
+- how to partition
+  - explicitly specify partition
+    - don't usually do this
+  - using keys - hash-based partitioning
+  - (old) round-robin partitioning
+    - doesn't send the records immediately
+    - not optimal
+  - sticky partition
+    - https://www.confluent.io/blog/apache-kafka-producer-improvements-sticky-partitioner/

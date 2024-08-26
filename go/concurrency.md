@@ -1,0 +1,2 @@
+- [Google I/O 2012 - Go Concurrency Patterns (YouTube)](https://www.youtube.com/watch?v=f6kdp27TYZs)
+  - [Communicating Sequential Processes (Hoare, 1978)](https://www.cs.cmu.edu/~crary/819-f09/Hoare78.pdf)

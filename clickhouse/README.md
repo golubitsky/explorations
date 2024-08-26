@@ -174,7 +174,14 @@ Each operator has an equivalent function, e.g., "a + b" is equivalent to plus(a,
       - null characters appended
     - if length > max length
       - exception
-- Date / Datetime
+- Date
+  - Date – based on UNIX epoch, two bytes
+  - Date32 — 32-bit integer
+  - no support for time zones
+- Datetime
+  - DateTime — supports second precision
+  - DateTime64 — supports subsecond precision
+  - supports IANA time zones
 - Array
 - Tuple
 - Nested

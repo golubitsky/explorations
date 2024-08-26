@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/chi/v5"
 )
 
@@ -35,6 +36,7 @@ func requestLoggerMiddleware(next http.Handler) http.Handler {
 
 func main() {
 	r := chi.NewRouter()
+	r.Use(middleware.Logger)
 	r.Use(requestLoggerMiddleware)
 
 	r.Get("/", homeHandler)
