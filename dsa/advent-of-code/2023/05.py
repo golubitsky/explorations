@@ -5,17 +5,24 @@ import re
 def read_with_default(d, key):
     # Any source numbers that aren't mapped correspond to the same destination number.
     # So, seed number 10 corresponds to soil number 10.
-    if key not in d:
-        d[key] = key
-    return d[key]
+    for map_range in d:
+        if map_range["min_in_range"] <= key and map_range["max_in_range"] >= key:
+            return key + map_range["offset"]
+
+    return key
 
 
 def parsed_map(map):
-    result = {}
+    result = []
     for line in map.split("\n")[1:]:
         destination, source, len_range = [int(value) for value in line.split()]
-        for i in range(len_range):
-            result[source + i] = destination + i
+        result.append(
+            {
+                "offset": destination - source,
+                "min_in_range": source,
+                "max_in_range": source + len_range,
+            }
+        )
     return result
 
 
@@ -48,6 +55,6 @@ def part_one(data):
 
 
 if __name__ == "__main__":
-    with open("05_sample.txt", "r") as file:
+    with open("05_input.txt", "r") as file:
         data = file.read()
     print(part_one(data))
