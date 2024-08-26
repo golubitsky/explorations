@@ -1,9 +1,9 @@
-import os
+import sys
 
 
 def create_files(n):
     # Ensure n is formatted as a two-digit string
-    n_str = f"{n:02}"
+    n_str = n.zfill(2)
 
     # Define filenames
     python_file = f"{n_str}.py"
@@ -33,8 +33,4 @@ if __name__ == "__main__":
 
 # Example usage
 if __name__ == "__main__":
-    n = int(input("Enter a two-digit number (01 to 25): "))
-    if 1 <= n <= 25:
-        create_files(n)
-    else:
-        print("Number out of range. Please enter a number between 01 and 25.")
+    create_files(sys.argv[1])
