@@ -26,7 +26,21 @@ def parsed_map(map):
     return result
 
 
-def part_one(data):
+def seeds_part_one(seeds):
+    return [int(seed) for seed in re.findall(r"\d+", seeds)]
+
+
+def seeds_part_two(seeds):
+    result = []
+    seeds = re.findall(r"\d+", seeds)
+    for i in range(0, len(seeds), 2):
+        seed, seed_range = [int(x) for x in seeds[i : i + 2]]
+        for i in range(seed_range):
+            result.append(seed + i)
+    return result
+
+
+def solution(data, part=1):
     seeds, *maps = data.split("\n\n")
     (
         seed_to_soil,
@@ -37,7 +51,7 @@ def part_one(data):
         temperature_to_humidity,
         humidity_to_location,
     ) = [parsed_map(map) for map in maps]
-    seeds = [int(seed) for seed in re.findall(r"\d+", seeds)]
+    seeds = seeds_part_one(seeds) if part == 1 else seeds_part_two(seeds)
     lowest_location = math.inf
     for seed in seeds:
         soil = read_with_default(seed_to_soil, seed)
@@ -55,6 +69,6 @@ def part_one(data):
 
 
 if __name__ == "__main__":
-    with open("05_input.txt", "r") as file:
+    with open("05_sample.txt", "r") as file:
         data = file.read()
-    print(part_one(data))
+    print(solution(data, part=2))
