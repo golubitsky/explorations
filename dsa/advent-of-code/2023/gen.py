@@ -18,7 +18,7 @@ def part_one(data):
     pass
 
 if __name__ == "__main__":
-    with open("{n_str}_sample.txt", 'r') as file:
+    with open("day_{n_str}_sample.txt", 'r') as file:
         data = file.readlines()
     print(part_one(data))
 """
