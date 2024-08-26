@@ -31,6 +31,6 @@ def part_two(data):
 
 
 if __name__ == "__main__":
-    with open("04_input.txt", "r") as file:
+    with open("day_04_input.txt", "r") as file:
         data = file.readlines()
     print(part_two(data))

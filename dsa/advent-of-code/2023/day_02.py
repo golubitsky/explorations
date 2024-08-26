@@ -77,7 +77,7 @@ def part_two(lines):
 
 
 if __name__ == "__main__":
-    data = open("02_input.txt")
+    data = open("day_02_input.txt")
     print(part_one(data))
-    data = open("02_input.txt")
+    data = open("day_02_input.txt")
     print(part_two(data))

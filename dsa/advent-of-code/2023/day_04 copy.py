@@ -12,10 +12,12 @@ def part_one(data):
             total_count += 2 ** (count_my_wins - 1)
     return total_count
 
+
 def part_two(data):
     pass
 
+
 if __name__ == "__main__":
-    with open("04_input.txt", "r") as file:
+    with open("day_04_input.txt", "r") as file:
         data = file.readlines()
     print(part_two(data))

@@ -89,7 +89,7 @@ def part_two(parsed_data):
     return sum(gear_ratios)
 
 if __name__ == "__main__":
-    # data = open("03_input.txt")
+    # data = open("day_03_input.txt")
     # print(part_one(parsed(data)))
-    data = open("03_input.txt")
+    data = open("day_03_input.txt")
     print(part_two(parsed(data)))

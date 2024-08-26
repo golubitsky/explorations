@@ -140,7 +140,7 @@ def part_two(data):
 
 
 if __name__ == "__main__":
-    with open("05_input.txt", "r") as file:
+    with open("day_05_input.txt", "r") as file:
         data = file.read()
     print(part_two(data))
     # TODO: 50716417 too high
