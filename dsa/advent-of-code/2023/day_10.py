@@ -1,22 +1,24 @@
 def north(row, col):
-    return (row - 1, col)
+    return [row - 1, col]
 
 
 def south(row, col):
-    return (row + 1,col)
+    return [row + 1, col]
 
 
 def east(row, col):
-    return (row,col + 1)
+    return [row, col + 1]
 
 
 def west(row, col):
-    return (row,col - 1)
+    return [row, col - 1]
+
 
 def in_bound(row, col, data):
     return row >= 0 and row < len(data) and col >= 0 and col < len(data[0])
 
-def part_one(data):
+
+def parsed(data):
     # parse as chars
     data = [list(line.strip()) for line in data]
 
@@ -68,10 +70,40 @@ def part_one(data):
             adjacent_node = data[row_adj][col_adj]
             if (r, c) in adjacent_node['edges']:
                 starting_node['edges'].append((row_adj, col_adj))
-    print(starting_node)
+
+    return (data, starting_node)
+
+
+def pick_edge(node, previous_node):
+    if node['char'] == 'S':
+        # doesn't matter which way we go because starting node is
+        # guaranteed to be part of circular pipe
+        return node['edges'][0]
+    else:
+        for edge in node['edges']:
+            if edge != (previous_node['row'], previous_node['col']):
+                return edge
+
+
+def part_one(data):
+    data, starting_node = parsed(data)
+
+    previous_node = None
+    node = starting_node
+    adj_row, adj_col = pick_edge(node, previous_node)
+    node, previous_node = data[adj_row][adj_col], node
+    steps_to_get_back_to_start = 1 # already took one step away from start
+    
+    while node != starting_node:
+        adj_row, adj_col = pick_edge(node, previous_node)
+        node, previous_node = data[adj_row][adj_col], node
+        steps_to_get_back_to_start += 1
+
+    print("loop steps:", steps_to_get_back_to_start)
+    print("to point furthest:", steps_to_get_back_to_start//2)
 
 
 if __name__ == "__main__":
-    with open("day_10_sample.txt", "r") as file:
+    with open("day_10_input.txt", "r") as file:
         data = file.readlines()
     print(part_one(data))
