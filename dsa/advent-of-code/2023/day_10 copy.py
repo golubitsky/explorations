@@ -119,18 +119,13 @@ def print_grid_for_part_two(data):
         print()
     print()
 
-'''
-Credit to https://www.reddit.com/r/adventofcode/comments/18ey1s7/comment/kcsxijg/
-I calculated whether I was inside/outside the loop by traversing diagonally (from SE to NW in my case).
-
-Passing a | or a - counts, as does an F or a J. But if you're going from SE to NW then passing over a 7 or an L does not change the parity.
-
-Much easier than going horizontally or vertically and having to keep track of left/right or non-zero winding rule type things.
-'''
 def part_two(data):
-    # print_grid_for_part_two(data)
+    print_grid_for_part_two(data)
 
-    # Diagonally traverse entire grid
+    # "L": [north, east],
+    # "J": [west, north],
+    # "7": [west, south],
+    # "F": [east, south],
     starting_y = 0
     starting_x = 0
     count_inside = 0
@@ -170,7 +165,7 @@ def part_two(data):
 
 
 if __name__ == "__main__":
-    with open("day_10_input.txt", "r") as file:
+    with open("day_10_sample_3.txt", "r") as file:
         data = file.readlines()
     data = part_one(data)
     part_two(data)
