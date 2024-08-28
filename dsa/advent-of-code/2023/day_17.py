@@ -20,13 +20,6 @@ def parsed_as_matrix(data):
     return [list(row.strip()) for row in data]
 
 
-def print_matrix(matrix):
-    for y in range(len(matrix)):
-        for x in range(len(matrix[0])):
-            print(matrix[y][x], end="")
-        print()
-
-
 def run_graph_diagnostics(graph):
     count_partial_missing = 0
     count_full_missing = 0
@@ -66,6 +59,11 @@ def initialize_graph_with_bfs_of_matrix(matrix):
     def in_bounds(y, x):
         return y >= 0 and y < len(matrix) and x >= 0 and x < len(matrix[0])
 
+    def debug_print(*args):
+        if node_key != (0, 4, UP, 1):
+            return
+        print(*args)
+
     def neighbor_keys(node_key):
         keys = []
         for direction in DIRECTIONS:
@@ -76,15 +74,15 @@ def initialize_graph_with_bfs_of_matrix(matrix):
                 n_steps_in_direction = node_key.n_steps_in_direction + 1
             else:
                 n_steps_in_direction = 0
-            if n_steps_in_direction > 3:
+            if n_steps_in_direction > 2:
                 continue  # crucible can't go more than 3 in the same direction
+
             y_v, x_v = VECTOR_BY_DIRECTION[direction]
             y = node_key.y + y_v
             x = node_key.x + x_v
 
             if in_bounds(y, x):
                 keys.append(NodeKey(y, x, direction, n_steps_in_direction))
-
         return keys
 
     graph = {}
@@ -113,10 +111,11 @@ def initialize_graph_with_bfs_of_matrix(matrix):
         cur_node = graph[node_key]
 
         for neighbor_key in neighbor_keys(node_key):
+            cur_node["neighbors"].append(neighbor_key)
+
             if neighbor_key not in visited:
-                visited.add(neighbor_key)
-                cur_node["neighbors"].append(neighbor_key)
                 add_to_graph(neighbor_key)
+                visited.add(neighbor_key)
 
                 # Create one common ending node with a cost of zero.
                 if (
@@ -131,17 +130,17 @@ def initialize_graph_with_bfs_of_matrix(matrix):
 
 
 def dijkstra(graph, start_node_key):
-    # for key in graph:
-    #     print(key, graph[key])
     pq = [(0, start_node_key)]
     heapq.heapify(pq)
 
     shortest_paths = {start_node_key: 0}
     previous_node_keys = {start_node_key: None}
 
-    def debug_print(string):
+    def debug_print(*args):
         return
-        print(string)
+        if cur_key != (0, 4, UP, 1):
+            return
+        print(*args)
 
     while pq:
         cur_distance, cur_key = heapq.heappop(pq)
@@ -166,15 +165,37 @@ def dijkstra(graph, start_node_key):
     return shortest_paths, previous_node_keys
 
 
+def print_matrix(matrix, previous, end_node_key):
+    path = set()
+    node_key = previous[end_node_key]
+    while node_key:
+        path.add((node_key.y, node_key.x))
+        if node_key.y == 4:
+            print(node_key)
+        node_key = previous[node_key]
+    for y in range(len(matrix)):
+        for x in range(len(matrix[0])):
+            if (y, x) in path:
+                char = "x"
+            else:
+                char = matrix[y][x]
+
+            print(char, end="")
+        print()
+
+
 def part_one(data):
     matrix = parsed_as_matrix(data)
     graph, start_node_keys, end_node_key = initialize_graph_with_bfs_of_matrix(matrix)
+
     for key in start_node_keys:
         shortest_paths, previous_node_keys = dijkstra(graph, key)
-        print(shortest_paths[end_node_key])
+        if end_node_key in shortest_paths:
+            # print_matrix(matrix, previous_node_keys, end_node_key)
+            print(shortest_paths[end_node_key])
 
 
 if __name__ == "__main__":
-    with open("day_17_sample.txt", "r") as file:
+    with open("day_17_input.txt", "r") as file:
         data = file.readlines()
     part_one(data)
