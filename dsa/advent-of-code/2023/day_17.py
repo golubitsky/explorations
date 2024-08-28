@@ -81,11 +81,6 @@ def initialize_graph_with_bfs_of_matrix(matrix):
 
         return keys
 
-    # For ending node, create an "extra" ending node that can be reached
-    # from all the flavors of the "real" ending node. Its cost will be zero
-    # and shouldn't affect the final result.
-    end_node_key = NodeKey(len(matrix), len(matrix[0]), "X", "X")
-    ending_node_keys = []
     graph = {}
     visited = set()
 
@@ -93,9 +88,17 @@ def initialize_graph_with_bfs_of_matrix(matrix):
         NodeKey(y=0, x=0, direction=RIGHT, n_steps_in_direction=0),
         NodeKey(y=0, x=0, direction=DOWN, n_steps_in_direction=0),
     ]
+
+    # For ending node, create an "extra" ending node that can be reached
+    # from all the flavors of the "real" ending node. Its cost will be zero
+    # and shouldn't affect the final result.
+    end_node_key = NodeKey(len(matrix), len(matrix[0]), "X", "X")
+
     for node_key in start_node_keys:
         visited.add(node_key)
         add_to_graph(node_key)
+
+    add_to_graph(end_node_key)
 
     queue = deque(start_node_keys.copy())
 
@@ -109,19 +112,14 @@ def initialize_graph_with_bfs_of_matrix(matrix):
                 cur_node["neighbors"].append(neighbor_key)
                 add_to_graph(neighbor_key)
 
-                # At the end, we'll create one common ending node with a cost of zero.
+                # Create one common ending node with a cost of zero.
                 if (
                     neighbor_key.y == len(matrix) - 1
                     and neighbor_key.x == len(matrix[0]) - 1
                 ):
-                    ending_node_keys.append(neighbor_key)
+                    graph[neighbor_key]["neighbors"].append(end_node_key)
 
                 queue.append(neighbor_key)
-
-    # Create the extra end node and add it as a neighbor to all the actual end nodes.
-    add_to_graph(end_node_key)
-    for key in ending_node_keys:
-        graph[key]["neighbors"].append(end_node_key)
 
     return graph, start_node_keys, end_node_key
 
