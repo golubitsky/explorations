@@ -33,7 +33,6 @@ def run_graph_diagnostics(graph):
                         graph[node]
                         found = True
                     except KeyError:
-                        # print(node)
                         count_partial_missing += 1
             if not found:
                 count_full_missing += 1
@@ -44,12 +43,6 @@ def run_graph_diagnostics(graph):
 def initialize_graph_with_bfs_of_matrix(matrix):
     def add_to_graph(node_key):
         graph[node_key] = {
-            # TODO: potentially delete below
-            # "y": node_key.y,
-            # "x": node_key.x,
-            # "direction": node_key.direction,
-            # "distance": 0 if node_key in start_node_keys else math.inf,
-            # TODO: potentially delete above
             "cost": (
                 0 if node_key == end_node_key else int(matrix[node_key.y][node_key.x])
             ),
@@ -86,7 +79,6 @@ def initialize_graph_with_bfs_of_matrix(matrix):
         return keys
 
     graph = {}
-    visited = set()
 
     start_node_keys = [
         NodeKey(y=0, x=0, direction=RIGHT, n_steps_in_direction=0),
@@ -99,7 +91,6 @@ def initialize_graph_with_bfs_of_matrix(matrix):
     end_node_key = NodeKey(len(matrix), len(matrix[0]), "X", "X")
 
     for node_key in start_node_keys:
-        visited.add(node_key)
         add_to_graph(node_key)
 
     add_to_graph(end_node_key)
@@ -113,9 +104,8 @@ def initialize_graph_with_bfs_of_matrix(matrix):
         for neighbor_key in neighbor_keys(node_key):
             cur_node["neighbors"].append(neighbor_key)
 
-            if neighbor_key not in visited:
+            if neighbor_key not in graph:
                 add_to_graph(neighbor_key)
-                visited.add(neighbor_key)
 
                 # Create one common ending node with a cost of zero.
                 if (
@@ -196,6 +186,6 @@ def part_one(data):
 
 
 if __name__ == "__main__":
-    with open("day_17_input.txt", "r") as file:
+    with open("day_17_sample.txt", "r") as file:
         data = file.readlines()
     part_one(data)
