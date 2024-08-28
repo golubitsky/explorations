@@ -52,10 +52,10 @@ def initialize_graph_with_bfs_of_matrix(matrix):
     def add_to_graph(node_key):
         graph[node_key] = {
             # TODO: potentially delete below
-            "y": node_key.y,
-            "x": node_key.x,
-            "direction": node_key.direction,
-            "distance": 0 if node_key in start_node_keys else math.inf,
+            # "y": node_key.y,
+            # "x": node_key.x,
+            # "direction": node_key.direction,
+            # "distance": 0 if node_key in start_node_keys else math.inf,
             # TODO: potentially delete above
             "cost": (
                 0 if node_key == end_node_key else int(matrix[node_key.y][node_key.x])
@@ -131,23 +131,34 @@ def initialize_graph_with_bfs_of_matrix(matrix):
 
 
 def dijkstra(graph, start_node_key):
+    # for key in graph:
+    #     print(key, graph[key])
     pq = [(0, start_node_key)]
     heapq.heapify(pq)
 
     shortest_paths = {start_node_key: 0}
     previous_node_keys = {start_node_key: None}
 
-    while pq:
-        current_cost, cur_key = heapq.heappop(pq)
-        cur_node = graph[cur_key]
+    def debug_print(string):
+        return
+        print(string)
 
-        if current_cost > shortest_paths.get(cur_key, math.inf):
+    while pq:
+        cur_distance, cur_key = heapq.heappop(pq)
+        debug_print(f"cur node: {(cur_key.y, cur_key.x)}")
+        debug_print(f"  cur distance: {cur_distance}")
+        cur_node = graph[cur_key]
+        debug_print(f'  neighbors: {[(k.y, k.x) for k in cur_node["neighbors"]]}')
+
+        if cur_distance > shortest_paths.get(cur_key, math.inf):
             continue
 
         for neighbor_key in cur_node["neighbors"]:
-            distance = current_cost + graph[neighbor_key]["cost"]
+            distance = cur_distance + graph[neighbor_key]["cost"]
+            debug_print(f"  distance to neighbor: {distance}")
 
             if distance < shortest_paths.get(neighbor_key, math.inf):
+                debug_print("shorter")
                 shortest_paths[neighbor_key] = distance
                 previous_node_keys[neighbor_key] = cur_key
                 heapq.heappush(pq, (distance, neighbor_key))
@@ -160,8 +171,7 @@ def part_one(data):
     graph, start_node_keys, end_node_key = initialize_graph_with_bfs_of_matrix(matrix)
     for key in start_node_keys:
         shortest_paths, previous_node_keys = dijkstra(graph, key)
-        # substract one for the extra ending node
-        print(shortest_paths[end_node_key] - 1)
+        print(shortest_paths[end_node_key])
 
 
 if __name__ == "__main__":
