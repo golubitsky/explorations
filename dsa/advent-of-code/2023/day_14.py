@@ -83,12 +83,14 @@ def run_tile_cycle(matrix, directions):
 def part_two(data):
     matrix = parsed_as_matrix(data)
     directions = [NORTH, WEST, SOUTH, EAST]
-    n_cycles = 10000
+    n_cycles = 1000
+
+    loads = []
 
     for _ in range(n_cycles):
         run_tile_cycle(matrix, directions)
-    print_matrix(matrix)
-    print(total_load(matrix))
+        loads.append(total_load(matrix))
+    print(loads)
 
 
 def print_matrix(matrix):
@@ -100,4 +102,44 @@ def print_matrix(matrix):
 if __name__ == "__main__":
     with open("day_14_sample.txt", "r") as file:
         data = file.readlines()
-    part_two(data)
+    # part_two(data)
+
+    # Manually-detected load cycle
+    cycle = [
+        104644,
+        104618,
+        104627,
+        104633,
+        104639,
+        104635,
+        104640,
+        104651,
+        104625,
+        104620,
+        104626,
+        104646,
+        104642,
+        104633,
+        104644,
+        104632,
+        104627,
+        104619,
+        104639,
+        104649,
+        104640,
+        104637,
+        104625,
+        104634,
+        104626,
+        104632,
+        104642,
+        104647,
+    ]
+    cycle_start_index = 170
+    target_index = 1_000_000_000 - 1
+    cycle_length = len(cycle)
+
+    relative_position = target_index - cycle_start_index
+    cycle_index = relative_position % cycle_length
+
+    print(cycle[cycle_index])
