@@ -1,3 +1,5 @@
+import heapq
+
 from collections import deque, namedtuple
 import math
 
@@ -49,11 +51,15 @@ def run_graph_diagnostics(graph):
 def initialize_graph_with_bfs_of_matrix(matrix):
     def add_to_graph(node_key):
         graph[node_key] = {
+            # TODO: potentially delete below
             "y": node_key.y,
             "x": node_key.x,
             "direction": node_key.direction,
-            "cost": 0 if node_key == end_node_key else matrix[node_key.y][node_key.x],
             "distance": 0 if node_key in start_node_keys else math.inf,
+            # TODO: potentially delete above
+            "cost": (
+                0 if node_key == end_node_key else int(matrix[node_key.y][node_key.x])
+            ),
             "neighbors": [],
         }
 
@@ -124,12 +130,38 @@ def initialize_graph_with_bfs_of_matrix(matrix):
     return graph, start_node_keys, end_node_key
 
 
+def dijkstra(graph, start_node_key):
+    pq = [(0, start_node_key)]
+    heapq.heapify(pq)
+
+    shortest_paths = {start_node_key: 0}
+    previous_node_keys = {start_node_key: None}
+
+    while pq:
+        current_cost, cur_key = heapq.heappop(pq)
+        cur_node = graph[cur_key]
+
+        if current_cost > shortest_paths.get(cur_key, math.inf):
+            continue
+
+        for neighbor_key in cur_node["neighbors"]:
+            distance = current_cost + graph[neighbor_key]["cost"]
+
+            if distance < shortest_paths.get(neighbor_key, math.inf):
+                shortest_paths[neighbor_key] = distance
+                previous_node_keys[neighbor_key] = cur_key
+                heapq.heappush(pq, (distance, neighbor_key))
+
+    return shortest_paths, previous_node_keys
+
+
 def part_one(data):
     matrix = parsed_as_matrix(data)
     graph, start_node_keys, end_node_key = initialize_graph_with_bfs_of_matrix(matrix)
-    print(start_node_keys)
-    print(graph[end_node_key])
-    print_matrix(matrix)
+    for key in start_node_keys:
+        shortest_paths, previous_node_keys = dijkstra(graph, key)
+        # substract one for the extra ending node
+        print(shortest_paths[end_node_key] - 1)
 
 
 if __name__ == "__main__":
