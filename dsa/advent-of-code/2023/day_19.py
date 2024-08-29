@@ -91,7 +91,15 @@ def part_one(data):
     print(total)
 
 
+def part_two(data):
+    workflows, _ = parsed(data)
+    # TODO: find all "A" paths through workflows
+    # for each path, track min/max requirements for the path
+    total = sum([sum(accepted.values()) for accepted in results["A"]])
+    print(total)
+
+
 if __name__ == "__main__":
-    with open("day_19_input.txt", "r") as file:
+    with open("day_19_sample.txt", "r") as file:
         data = file.read()
-    part_one(data)
+    part_two(data)
