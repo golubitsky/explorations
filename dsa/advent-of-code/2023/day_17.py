@@ -40,7 +40,7 @@ def run_graph_diagnostics(graph):
     print(f"completely missing {count_full_missing}")
 
 
-def initialize_graph_with_bfs_of_matrix(matrix):
+def initialize_graph_with_bfs_of_matrix(matrix, part):
     def add_to_graph(node_key):
         graph[node_key] = {
             "cost": (
@@ -53,11 +53,11 @@ def initialize_graph_with_bfs_of_matrix(matrix):
         return y >= 0 and y < len(matrix) and x >= 0 and x < len(matrix[0])
 
     def debug_print(*args):
-        if node_key != (0, 4, UP, 1):
+        if node_key != (4, 10, DOWN, 4):
             return
         print(*args)
 
-    def neighbor_keys(node_key):
+    def neighbor_keys_part_1(node_key):
         keys = []
         for direction in DIRECTIONS:
             if direction == REVERSE_DIRECTION[node_key.direction]:
@@ -66,8 +66,8 @@ def initialize_graph_with_bfs_of_matrix(matrix):
             if direction == node_key.direction:
                 n_steps_in_direction = node_key.n_steps_in_direction + 1
             else:
-                n_steps_in_direction = 0
-            if n_steps_in_direction > 2:
+                n_steps_in_direction = 1
+            if n_steps_in_direction > 3:
                 continue  # crucible can't go more than 3 in the same direction
 
             y_v, x_v = VECTOR_BY_DIRECTION[direction]
@@ -76,6 +76,32 @@ def initialize_graph_with_bfs_of_matrix(matrix):
 
             if in_bounds(y, x):
                 keys.append(NodeKey(y, x, direction, n_steps_in_direction))
+        return keys
+
+    def neighbor_keys_part_2(node_key):
+        keys = []
+        for direction in DIRECTIONS:
+            if direction == REVERSE_DIRECTION[node_key.direction]:
+                continue  # crucible can't reverse
+
+            if node_key.n_steps_in_direction < 4 and direction != node_key.direction:
+                continue  # crucible must go at least 4 in the same direction
+
+            if direction == node_key.direction:
+                n_steps_in_direction = node_key.n_steps_in_direction + 1
+            else:
+                n_steps_in_direction = 1
+
+            if n_steps_in_direction > 10 and direction == node_key.direction:
+                continue  # crucible gets wobbly after 10 moves, must turn
+
+            y_v, x_v = VECTOR_BY_DIRECTION[direction]
+            y = node_key.y + y_v
+            x = node_key.x + x_v
+
+            if in_bounds(y, x):
+                neighbor = NodeKey(y, x, direction, n_steps_in_direction)
+                keys.append(neighbor)
         return keys
 
     graph = {}
@@ -100,8 +126,12 @@ def initialize_graph_with_bfs_of_matrix(matrix):
     while queue:
         node_key = queue.popleft()
         cur_node = graph[node_key]
-
-        for neighbor_key in neighbor_keys(node_key):
+        neighbor_keys = (
+            neighbor_keys_part_1(node_key)
+            if part == 1
+            else neighbor_keys_part_2(node_key)
+        )
+        for neighbor_key in neighbor_keys:
             cur_node["neighbors"].append(neighbor_key)
 
             if neighbor_key not in graph:
@@ -112,6 +142,10 @@ def initialize_graph_with_bfs_of_matrix(matrix):
                     neighbor_key.y == len(matrix) - 1
                     and neighbor_key.x == len(matrix[0]) - 1
                 ):
+                    if neighbor_key.n_steps_in_direction < 4 and part == 2:
+                        # cannot stop unless traveled 4 in same direction
+                        continue
+
                     graph[neighbor_key]["neighbors"].append(end_node_key)
 
                 queue.append(neighbor_key)
@@ -160,8 +194,6 @@ def print_matrix(matrix, previous, end_node_key):
     node_key = previous[end_node_key]
     while node_key:
         path.add((node_key.y, node_key.x))
-        if node_key.y == 4:
-            print(node_key)
         node_key = previous[node_key]
     for y in range(len(matrix)):
         for x in range(len(matrix[0])):
@@ -174,9 +206,11 @@ def print_matrix(matrix, previous, end_node_key):
         print()
 
 
-def part_one(data):
+def solution(data, part):
     matrix = parsed_as_matrix(data)
-    graph, start_node_keys, end_node_key = initialize_graph_with_bfs_of_matrix(matrix)
+    graph, start_node_keys, end_node_key = initialize_graph_with_bfs_of_matrix(
+        matrix, part
+    )
 
     for key in start_node_keys:
         shortest_paths, previous_node_keys = dijkstra(graph, key)
@@ -186,6 +220,6 @@ def part_one(data):
 
 
 if __name__ == "__main__":
-    with open("day_17_sample.txt", "r") as file:
+    with open("day_17_input.txt", "r") as file:
         data = file.readlines()
-    part_one(data)
+    solution(data, part=2)
