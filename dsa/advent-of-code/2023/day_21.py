@@ -14,7 +14,13 @@ def parsed(data):
                 return grid, (y, x)
 
 
+NEIGHBOR_CACHE = {}
+
+
 def neighbors(pos, grid):
+    if pos in NEIGHBOR_CACHE:
+        return NEIGHBOR_CACHE[pos]
+
     def in_bounds(other_pos):
         y, x = other_pos
         return y >= 0 and y < len(grid) and x >= 0 and x < len(grid[0])
@@ -26,11 +32,14 @@ def neighbors(pos, grid):
     def new_pos(pos, vector):
         return (pos[0] + vector[0], pos[1] + vector[1])
 
-    return [
+    result = [
         new_pos(pos, v)
         for v in VECTORS
         if in_bounds(new_pos(pos, v)) and is_empty(new_pos(pos, v))
     ]
+    NEIGHBOR_CACHE[pos] = result
+
+    return result
 
 
 def print_grid(grid, seen):
