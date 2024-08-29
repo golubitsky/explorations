@@ -88,6 +88,27 @@ def print_lagoon(holes):
         print()
 
 
+def part_two(data):
+    pos = (0, 0)
+    holes = set()
+    for line in data:
+        hex_code = line.strip().split(" ")[-1][2:-1]
+
+        direction = [RIGHT, DOWN, LEFT, UP][int(hex_code[5])]
+        count = int(hex_code[:5], 16)
+        print(count)
+        continue
+        holes.add(pos)
+
+        for _ in range(count):
+            pos = next_pos(pos, direction)
+            holes.add(pos)
+    holes.add(pos)
+
+    print(area(holes))
+    # print_lagoon(holes)
+
+
 def part_one(data):
     pos = (0, 0)
     holes = set()
@@ -96,7 +117,7 @@ def part_one(data):
         holes.add(pos)
 
         count = int(count)
-        for i in range(count):
+        for _ in range(count):
             pos = next_pos(pos, direction)
             holes.add(pos)
     holes.add(pos)
@@ -106,6 +127,6 @@ def part_one(data):
 
 
 if __name__ == "__main__":
-    with open("day_18_input.txt", "r") as file:
+    with open("day_18_sample.txt", "r") as file:
         data = file.readlines()
-    part_one(data)
+    part_two(data)
