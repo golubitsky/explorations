@@ -20,7 +20,7 @@ def part_one(data):
 if __name__ == "__main__":
     with open("day_{n_str}_sample.txt", 'r') as file:
         data = file.readlines()
-    print(part_one(data))
+    part_one(data)
 """
         )
 
