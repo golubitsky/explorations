@@ -1,7 +1,6 @@
 import re
-
 from copy import deepcopy
-
+import math
 
 def parsed_workflows(workflows_raw):
     workflows = {}
@@ -206,21 +205,17 @@ def part_one(data):
 
 def part_two(data):
     workflows, _ = parsed(data)
-    # TODO: find all "A" paths through workflows
-    # for each path, track min/max requirements for the path
-    combined = {
-        "x": [None] * 4000,
-        "m": [None] * 4000,
-        "a": [None] * 4000,
-        "s": [None] * 4000,
-    }
-    for filter in find_all_filters(workflows):
-        # for category in filter:
-        #     print(filter[category]['min'])
-        print(filter)
 
+    total = 0
+    for filter in find_all_filters(workflows):
+        xx = 1
+        for category in filter:
+            x = filter[category]['max'] - filter[category]['min'] + 1
+            xx *= x
+        total += xx
+    print(total)
 
 if __name__ == "__main__":
-    with open("day_19_sample.txt", "r") as file:
+    with open("day_19_input.txt", "r") as file:
         data = file.read()
     part_two(data)
