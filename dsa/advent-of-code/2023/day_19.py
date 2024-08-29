@@ -42,23 +42,23 @@ def parsed(data):
     return parsed_workflows(workflows_raw), parts
 
 
-def part_one(data):
-    workflows, parts = parsed(data)
+def destination(part, rule):
+    a = part[rule["category"]]
+    o = rule["operator"]
+    b = rule["value"]
+    d = rule["destination"]
+
+    if o == "<":
+        return d if a < b else None
+    elif o == ">":
+        return d if a > b else None
+    else:
+        print(f"unknown operator {o}")
+        exit()
+
+
+def run_sorting_process(parts, workflows):
     results = {"A": [], "R": []}
-
-    def destination(part, rule):
-        a = part[rule["category"]]
-        o = rule["operator"]
-        b = rule["value"]
-        d = rule["destination"]
-
-        if o == "<":
-            return d if a < b else None
-        elif o == ">":
-            return d if a > b else None
-        else:
-            print(f"unknown operator {o}")
-            exit()
 
     for part in parts:
         workflow = workflows["in"]
@@ -81,6 +81,12 @@ def part_one(data):
                     else:
                         print(f"unknown destination {d}")
                         exit()
+    return results
+
+
+def part_one(data):
+    workflows, parts = parsed(data)
+    results = run_sorting_process(parts, workflows)
     total = sum([sum(accepted.values()) for accepted in results["A"]])
     print(total)
 
