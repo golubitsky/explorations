@@ -49,7 +49,13 @@ def end_pos(grid):
             return (y, x)
 
 
-def neighbors(pos, grid):
+CACHE = {}
+
+
+def neighbors(pos, grid, part):
+    if pos in CACHE:
+        return CACHE[pos]
+
     def is_in_bounds(y2, x2):
         return y2 < len(grid) and y2 >= 0 and x2 < len(grid[0]) and x2 >= 0
 
@@ -60,31 +66,33 @@ def neighbors(pos, grid):
 
     result = []
 
-    if grid[y][x] in VECTOR_BY_CHAR:
-        dy, dx = VECTOR_BY_CHAR[grid[y][x]]
-        y2, x2 = y + dy, x + dx
-        if is_in_bounds(y2, x2) and is_path(y2, x2):
-            return [(y2, x2)]
-        print("logic error")
-        exit()
+    if part == 1:
+        if grid[y][x] in VECTOR_BY_CHAR:
+            dy, dx = VECTOR_BY_CHAR[grid[y][x]]
+            y2, x2 = y + dy, x + dx
+            if is_in_bounds(y2, x2) and is_path(y2, x2):
+                return [(y2, x2)]
+            print("logic error")
+            exit()
 
     for dy, dx in VECTORS:
         y2, x2 = y + dy, x + dx
         if is_in_bounds(y2, x2) and is_path(y2, x2):
             result.append((y2, x2))
 
+    CACHE[pos] = result
     return result
 
 
-def find_all_paths(start_pos, end_pos, grid):
-    all_paths = []
+def find_all_path_lengths(start_pos, end_pos, grid, part):
+    all_path_lengths = []
 
     def search(pos, path):
         if pos == end_pos:
-            all_paths.append(path)
+            all_path_lengths.append(len(path))
             return
 
-        for adj_pos in neighbors(pos, grid):
+        for adj_pos in neighbors(pos, grid, part):
             if adj_pos not in path:
                 new_path = path.copy()
                 new_path.add(adj_pos)
@@ -94,20 +102,20 @@ def find_all_paths(start_pos, end_pos, grid):
     path.add(start_pos)
     search(start_pos, path)
 
-    return all_paths
+    return all_path_lengths
 
 
-def part_one(data):
+def solution(data, part):
     grid = parsed(data)
 
-    paths = find_all_paths(start_pos(grid), end_pos(grid), grid)
+    all_path_lengths = find_all_path_lengths(start_pos(grid), end_pos(grid), grid, part)
 
     start_node_count = 1
-    print(sorted([len(path) - start_node_count for path in paths]))
+    print(sorted(all_path_lengths)[-1] - start_node_count)
 
 
 if __name__ == "__main__":
     sys.setrecursionlimit(10000)
     with open("day_23_input.txt", "r") as file:
         data = file.readlines()
-    part_one(data)
+    solution(data, part=1)
