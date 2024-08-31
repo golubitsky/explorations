@@ -1,0 +1,1 @@
+- Can you format and improve the organization of my notes in Markdown? Please group related information logically, apply consistent formatting, and remove unnecessary capitalization within sentences while retaining capitalization for specific terms. Ensure clarity and conciseness in each section.

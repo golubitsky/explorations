@@ -1,0 +1,133 @@
+- clarify system requirements. discuss possible tradeoffs.
+  - quickly brainstorm and scribble down potential functional requirements
+  - 30 seconds: overall purpose of the system
+  - briefly mention endpoints commmon to most systems, like health, signup, login
+  - details of some common functional requirements
+    - user categories/roles
+      - who will use the system and how?
+        - manual/consumer - mobile, web apps
+        - programmatic/enterprise - requests from other services/companies
+      - technical vs non-technical
+      - list user roles, e.g., buyer, seller, poster, viewer
+      - every functional requirement must have a number
+        - how many items
+        - how much time
+      - communication between users and/or operations staff
+      - regionalization (i18n and l10n)
+        - languages
+        - postal address
+        - prices — multiple currency support
+    - based on user categories, clarify scalability requirements
+      - estimate n daily active users
+      - estimate daily/hourly request rate
+      - e.g., 1 billion daily users; each submitting 10 search requests; 10B daily requests, 420M req/H
+    - which data should be accessible to which users
+      - authentication/authorization roles and mechanisms
+      - contents of the response body for API content
+      - how often is data retrieved?
+        - e.g., real-time, monthly reports, another frequency
+    - search
+      - possible use cases that involve search
+    - analytics
+      - possible machine learning requirements
+        - support for experimentation such as A/B testing, multi-armed bandit
+    - scribble down pseudoCode function signatures, e.g., fetchPosts
+      - match them to user stories
+      - discuss w/ interviewer which requirements are needed and which are out of scope
+      - ask "are there other user requirements?"
+        - but do the thinking yourself!
+        - requirements are subtle
+        - ask clarifying questions
+        - brainstorm future enhancements
+        - demonstrate critical thinking, attention to detail, humility, willingness to learn
+    - non-functional requirements
+      - design immediately for scalability?
+        - if not, maybe they are more interested in how we handle functional requirements, e.g., data model and APIs
+- draft the API specification
+  - based on func reqs, determine the data that users expect to receive from and send to system
+  - < 5 minutes: draft of REST endpoints, including path, query params
+    - don't linger here, "there's much more to discuss in limited time"
+    - don't update functional requirements here
+  - propose the API spec and describe how it satisfies all func reqs
+    - briefly describe any missed func reqs
+  - common API endpoints, likely out of scope, quickly mention
+    - GET /health
+    - POST /signup
+      - OpenID Connect (OIDC): token-based authentication performed by authorization server
+    - user management
+- connections and processing between users and data
+  - draw diagrams to represent connections between user and data
+  - include system components and data processing that occurs between them
+  - phase 1
+    - draw box to represent class of user
+    - draw box to represent each system that serves the func reqs
+    - draw connections between users and systems
+  - phase 2
+    - break up request processing and storage
+    - create different designs based on non-functional reqs, e.g. real-time vs eventual consistency
+    - consider shared services
+  - phrase 3
+    - break up systems into components, e.g., libraries, services
+    - draw connections
+    - consider logging, monitoring, alerting
+    - consider security
+  - phase 4
+    - include a summary of system design
+    - provide any new additional requirements
+    - analyze fault-tolerance
+      - what can go wrong with each component?
+        - network delays
+        - inconsistency
+        - no linearizability
+      - what can we do to prevent and/or mitigate each situation to improve fault-tolerance of component and overall system?
+- design the data model. discuss possible analytics.
+- discuss failure design, graceful degradation,
+  - levels of urgency of failures
+    - if service is dependency of other services, maybe higher urgency
+  - observability: logging, monitoring, alerting
+    - refer to Google's SRE book for 4 golden signals of monitoring:
+      - latency - we could add alerts for latency exceeding SLA
+      - traffic — alerts for higher traffic than supported by load testing
+      - errors - high-urgency alerts for 500s and select 400s that must be addressed urgently
+      - saturation — depending on system constraints (CPU, memory, I/O), set up utilization targets that should not be exceeded; another example: file or DB usage may run out 
+    - 3 instruments of monitoring: metrics (a variable we can measure), dashboards, alerts
+      - these are populated by processing log data
+    - logging
+      - general considerations
+        - structured, machine-readable
+        - each entry should contain UUID to support distributed tracing and user-dev communication
+        - small, easy to read, useful
+        - consistent format, e.g., timestamps
+        - log level
+        - do not log private/sensitive information (PII, personally identifiable information)
+      - host logging
+        - CPU/mem utilization
+        - network I/O
+      - request-level logging
+        - latency
+        - source of request
+        - request path, params, headers, body
+        - HTTP status code and response body
+        - errors
+        - log events to monitor how well system satisfies both func and non-fun reqs
+          - e.g., if we build a cache, monitor log cache hits, misses, page faults (not in memory
+            - metrics would include counts of each
+      - batch/streaming audit jobs that run periodically to validate system data integrity, possibly triggering alerts
+    - responding to alerts
+      - team may setup an on-call schedule for high-urgency alerts
+      - on-call engineer may not be familiar with cause of particular alerts
+      - create runbook with list of alerts, possible causes, procedures to find and fix issues
+        - if certain instructions consist of series of commands that can easily be copied and pasted
+          - automate
+        - failure to implement such automation is runbook abuse
+        - if certain instructions are to run commands to view metrics
+          - display those metrics on dashboard
+      - TODO: https://learning-oreilly-com.ezproxy.bpl.org/videos/acing-the-system/9781633439108VE/9781633439108VE-ace_ch25/
+  - bottlenecks
+  - load balancing
+  - removing single points of failure
+  - high availability
+  - disaster recovery
+  - caching
+- discuss complexity and tradeoffs, maintenance and decommissioning processes, costs
+- reflect on the interview and evaluating the company
