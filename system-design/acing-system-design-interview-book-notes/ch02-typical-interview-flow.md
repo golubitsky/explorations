@@ -1,197 +1,207 @@
-- clarify system requirements. discuss possible tradeoffs.
-  - quickly brainstorm and scribble down potential functional requirements
-  - 30 seconds: overall purpose of the system
-  - briefly mention endpoints commmon to most systems, like health, signup, login
-  - details of some common functional requirements
-    - user categories/roles
-      - who will use the system and how?
-        - manual/consumer - mobile, web apps
-        - programmatic/enterprise - requests from other services/companies
-      - technical vs non-technical
-      - list user roles, e.g., buyer, seller, poster, viewer
-      - every functional requirement must have a number
-        - how many items
-        - how much time
-      - communication between users and/or operations staff
-      - regionalization (i18n and l10n)
-        - languages
-        - postal address
-        - prices — multiple currency support
-    - based on user categories, clarify scalability requirements
-      - estimate n daily active users
-      - estimate daily/hourly request rate
-      - e.g., 1 billion daily users; each submitting 10 search requests; 10B daily requests, 420M req/H
-    - which data should be accessible to which users
-      - authentication/authorization roles and mechanisms
-      - contents of the response body for API content
-      - how often is data retrieved?
-        - e.g., real-time, monthly reports, another frequency
-    - search
-      - possible use cases that involve search
-    - analytics
-      - possible machine learning requirements
-        - support for experimentation such as A/B testing, multi-armed bandit
-    - scribble down pseudoCode function signatures, e.g., fetchPosts
-      - match them to user stories
-      - discuss w/ interviewer which requirements are needed and which are out of scope
-      - ask "are there other user requirements?"
-        - but do the thinking yourself!
-        - requirements are subtle
-        - ask clarifying questions
-        - brainstorm future enhancements
-        - demonstrate critical thinking, attention to detail, humility, willingness to learn
-    - non-functional requirements
-      - design immediately for scalability?
-        - if not, maybe they are more interested in how we handle functional requirements, e.g., data model and APIs
-- draft the API specification
-  - based on func reqs, determine the data that users expect to receive from and send to system
-  - < 5 minutes: draft of REST endpoints, including path, query params
-    - don't linger here, "there's much more to discuss in limited time"
-    - don't update functional requirements here
-  - propose the API spec and describe how it satisfies all func reqs
-    - briefly describe any missed func reqs
-  - common API endpoints, likely out of scope, quickly mention
-    - GET /health
-    - POST /signup
-      - OpenID Connect (OIDC): token-based authentication performed by authorization server
-    - user management
-- connections and processing between users and data
-  - draw diagrams to represent connections between user and data
-  - include system components and data processing that occurs between them
-  - phase 1
-    - draw box to represent class of user
-    - draw box to represent each system that serves the func reqs
-    - draw connections between users and systems
-  - phase 2
-    - break up request processing and storage
-    - create different designs based on non-functional reqs, e.g. real-time vs eventual consistency
-    - consider shared services
-  - phrase 3
-    - break up systems into components, e.g., libraries, services
-    - draw connections
-    - consider logging, monitoring, alerting
-    - consider security
-  - phase 4
-    - include a summary of system design
-    - provide any new additional requirements
-    - analyze fault-tolerance
-      - what can go wrong with each component?
-        - network delays
-        - inconsistency
-        - no linearizability
-      - what can we do to prevent and/or mitigate each situation to improve fault-tolerance of component and overall system?
-- design the data model. discuss possible analytics.
-- search bar
-  - Elasticsearch
-    - loose mapping of terms from SQL DB to ES:
-      - DB: index
-      - Partition: shard
-      - Table: type (deprecated without replacement)
-      - Column: field
-      - Row: document
-      - Schema: mapping
-      - Index: everything is indexed
-    - query context
-      - "how well does the document match the query clause?" — relevance score
-    - filter context
-      - "does this document match the query clause?" — yes or no
-- discuss failure design, graceful degradation
-  - levels of urgency of failures
-    - if service is dependency of other services, maybe higher urgency
-  - observability: logging, monitoring, alerting
-    - **never forget to mention monitoring!**
-    - refer to Google's SRE book for 4 golden signals of monitoring:
-      - latency - we could add alerts for latency exceeding SLA
-      - traffic — alerts for higher traffic than supported by load testing
-      - errors - high-urgency alerts for 500s and select 400s that must be addressed urgently
-      - saturation — depending on system constraints (CPU, memory, I/O), set up utilization targets that should not be exceeded; another example: file or DB usage may run out
-    - 3 instruments of monitoring: metrics (a variable we can measure), dashboards, alerts
-      - these are populated by processing log data
-    - logging
-      - general considerations
-        - structured, machine-readable
-        - each entry should contain UUID to support distributed tracing and user-dev communication
-        - small, easy to read, useful
-        - consistent format, e.g., timestamps
-        - log level
-        - do not log private/sensitive information (PII, personally identifiable information)
-      - host logging
+- **Clarify System Requirements. Discuss Possible Tradeoffs**
+
+  - Quickly brainstorm and scribble down potential functional requirements
+  - 30 seconds: Overall purpose of the system
+  - Briefly mention endpoints common to most systems, like `/health`, `/signup`, `/login`
+  - **Details of Common Functional Requirements**
+    - **User Categories/Roles**
+      - Who will use the system and how?
+        - Manual/consumer: mobile, web apps
+        - Programmatic/enterprise: requests from other services/companies
+      - Technical vs non-technical
+      - List user roles, e.g., buyer, seller, poster, viewer
+      - Every functional requirement must have a number
+        - How many items
+        - How much time
+      - Communication between users and/or operations staff
+      - Regionalization (i18n and l10n)
+        - Languages
+        - Postal address
+        - Prices — multiple currency support
+    - **Scalability Requirements Based on User Categories**
+      - Estimate daily active users
+      - Estimate daily/hourly request rate
+        - E.g., 1 billion daily users; each submitting 10 search requests; 10B daily requests, 420M req/H
+    - **Data Access**
+      - Which data should be accessible to which users
+      - Authentication/authorization roles and mechanisms
+      - Contents of the response body for API content
+      - Data retrieval frequency (e.g., real-time, monthly reports)
+    - **Search**
+      - Possible use cases that involve search
+    - **Analytics**
+      - Possible machine learning requirements
+        - Support for experimentation such as A/B testing, multi-armed bandit
+    - **PseudoCode Function Signatures**
+      - E.g., `fetchPosts`
+      - Match them to user stories
+      - Discuss with interviewer which requirements are needed and which are out of scope
+      - Ask, "Are there other user requirements?"
+        - Do the thinking yourself
+        - Requirements are subtle
+        - Ask clarifying questions
+        - Brainstorm future enhancements
+        - Demonstrate critical thinking, attention to detail, humility, willingness to learn
+    - **Non-Functional Requirements**
+      - Design immediately for scalability?
+        - If not, focus on functional requirements, e.g., data model and APIs
+
+- **Draft the API Specification**
+
+  - Based on functional requirements, determine the data that users expect to receive from and send to the system
+  - **< 5 minutes:** Draft REST endpoints, including path, query params
+    - Don't linger here; "there's much more to discuss in limited time"
+    - Don't update functional requirements here
+  - Propose the API spec and describe how it satisfies all functional requirements
+    - Briefly describe any missed functional requirements
+  - **Common API Endpoints** (likely out of scope, quickly mention)
+    - `GET /health`
+    - `POST /signup`
+      - OpenID Connect (OIDC): Token-based authentication performed by authorization server
+    - User management
+
+- **Connections and Processing Between Users and Data**
+
+  - **Phase 1**
+    - Draw a box to represent class of user
+    - Draw a box to represent each system that serves the functional requirements
+    - Draw connections between users and systems
+  - **Phase 2**
+    - Break up request processing and storage
+    - Create different designs based on non-functional requirements, e.g., real-time vs eventual consistency
+    - Consider shared services
+  - **Phase 3**
+    - Break up systems into components, e.g., libraries, services
+    - Draw connections
+    - Consider logging, monitoring, alerting
+    - Consider security
+  - **Phase 4**
+    - Include a summary of system design
+    - Provide any new additional requirements
+    - Analyze fault tolerance
+      - What can go wrong with each component?
+        - Network delays
+        - Inconsistency
+        - No linearizability
+      - What can we do to prevent and/or mitigate each situation to improve fault tolerance of component and overall system?
+
+- **Design the Data Model. Discuss Possible Analytics**
+
+- **Discuss Failure Design and Graceful Degradation**
+
+  - **Levels of Urgency of Failures**
+    - If the service is a dependency of other services, maybe higher urgency
+  - **Observability: Logging, Monitoring, Alerting**
+    - **Never forget to mention monitoring!**
+    - Refer to Google's SRE book for 4 golden signals of monitoring:
+      - Latency — Alerts for latency exceeding SLA
+      - Traffic — Alerts for higher traffic than supported by load testing
+      - Errors — High-urgency alerts for 500s and select 400s that must be addressed urgently
+      - Saturation — Depending on system constraints (CPU, memory, I/O), set up utilization targets that should not be exceeded; file or DB usage may run out
+    - **Instruments of Monitoring:**
+      - Metrics (a variable we can measure)
+      - Dashboards
+      - Alerts
+    - **Logging**
+      - **General Considerations**
+        - Structured, machine-readable
+        - Each entry should contain UUID to support distributed tracing and user-dev communication
+        - Small, easy to read, useful
+        - Consistent format, e.g., timestamps
+        - Log level
+        - Do not log private/sensitive information (PII, personally identifiable information)
+      - **Host Logging**
         - CPU/mem utilization
-        - network I/O
-      - request-level logging
-        - latency
-        - source of request
-        - request path, params, headers, body
+        - Network I/O
+      - **Request-Level Logging**
+        - Latency
+        - Source of request
+        - Request path, params, headers, body
         - HTTP status code and response body
-        - errors
-        - log events to monitor how well system satisfies both func and non-fun reqs
-          - e.g., if we build a cache, monitor log cache hits, misses, page faults (not in memory
-            - metrics would include counts of each
-      - batch/streaming audit jobs that run periodically to validate system data integrity, possibly triggering alerts
-    - responding to alerts
-      - team may setup an on-call schedule for high-urgency alerts
-      - on-call engineer may not be familiar with cause of particular alerts
-      - create runbook with list of alerts, possible causes, procedures to find and fix issues
-        - if certain instructions consist of series of commands that can easily be copied and pasted
-          - automate
-        - failure to implement such automation is runbook abuse
-        - if certain instructions are to run commands to view metrics
-          - display those metrics on dashboard
-      - prometheus (monitoring system) + grafana (visualization)
-    - streaming and batch audit of data quality
-  - bottlenecks
-  - load balancing
-  - removing single points of failure
-  - high availability
-  - disaster recovery
-  - caching
-- discuss complexity and tradeoffs, maintenance and decommissioning processes, costs
-  - extend the service to support other types of users
-    - extend the current services
-    - build new services
-    - tradeoffs
-  - alternative architectural decisions
-    - revisit earlier-mentioned alternatives in more detail
-  - usability metrics
-    - collect use-case specific metrics to influence product development
-      - e.g.
-        - for a search engine, how close to the top of the results were users finding what they needed
-        - number of help desk tickets created per week (we want self-service)
+        - Errors
+        - Log events to monitor how well the system satisfies both functional and non-functional requirements
+          - E.g., if we build a cache, monitor log cache hits, misses, page faults (not in memory)
+            - Metrics would include counts of each
+      - **Batch/Streaming Audit Jobs**
+        - Run periodically to validate system data integrity, possibly triggering alerts
+    - **Responding to Alerts**
+      - Team may set up an on-call schedule for high-urgency alerts
+      - On-call engineer may not be familiar with the cause of particular alerts
+      - Create a runbook with list of alerts, possible causes, procedures to find and fix issues
+        - If certain instructions consist of a series of commands that can easily be copied and pasted
+          - Automate
+        - Failure to implement such automation is runbook abuse
+        - If certain instructions are to run commands to view metrics
+          - Display those metrics on a dashboard
+      - Prometheus (monitoring system) + Grafana (visualization)
+    - Streaming and batch audit of data quality
+
+- **Discuss Complexity and Tradeoffs, Maintenance and Decommissioning Processes, Costs**
+
+  - **Extend the Service to Support Other Types of Users**
+    - Extend current services
+    - Build new services
+    - Tradeoffs
+  - **Alternative Architectural Decisions**
+    - Revisit earlier-mentioned alternatives in more detail
+  - **Usability Metrics**
+
+    - Collect use-case specific metrics to influence product development
+      - E.g., for a search engine, how close to the top of the results were users finding what they needed
+      - Number of help desk tickets created per week (we want self-service)
     - UI components to solicit feedback from users
-- reflect on the interview
-- evaluating the company
-  - before your interview, read blogs to learn:
-    - what is this tool?
-    - who uses it?
-    - what does it do? how does it do these things? how is it different from other tools? what can it do that other tools cannot do? what can't it do that other tools can do?
-  - from each article, write down two questions to ask
-  - some points to understand, in general:
-    - technology stack
-    - data tools and infrastructure
-    - which tools were bought vs developed?
-    - which open-source contributions has the company made?
-    - history and development of various engineering projects
-    - quantity/breakdown of engineering resources
-    - how well did the tools address the users' requirements?
-      - best experiences and pain points
-      - which tools were abandoned and why?
-      - comparison to competitors and to state of the art
-      - what has the company done to address these points?
-    - what are engineers' experience with CI/CD tools?
-      - how often run into problems
-      - how long to troubleshoot
-    - what projects are planned and what needs do they fulfill?
-    - what is the eng. org's strategic vision?
-    - org-wide migration in the last two years?
-      - e.g., shift from bare metal to cloud vendor; stop using various tools
-      - have there been U-turns in migrations? what motivated the U-turns?
-    - security breaches in the history of the company?
-    - what can i learn and cannot learn from this company in the next four years?
-    - https://blog.pragmaticengineer.com/reverse-interviewing/
-- summary
-  - everything is a tradeoff
-  - be mindful of time. clarify important points and focus on them.
-  - clarify the system requirements and discuss possible tradeoffs in the system's capabilities to optimize for them
-  - draft the API specification to satisfy the functional requirements
-  - draw connections between users and data (read and write)
-  - other concerns: logging, monitoring, alerting, search, anything else that comes up.
+
+  - **Search Bar**
+    - **Elasticsearch**
+      - Loose mapping of terms from SQL DB to ES:
+        - DB: index
+        - Partition: shard
+        - Table: type (deprecated without replacement)
+        - Column: field
+        - Row: document
+        - Schema: mapping
+        - Index: everything is indexed
+      - **Query Context**
+        - "How well does the document match the query clause?" — relevance score
+      - **Filter Context**
+        - "Does this document match the query clause?" — yes or no
+
+- **Reflect on the Interview**
+- **Evaluating the Company**
+
+  - Before your interview, read blogs to learn:
+    - What is this tool?
+    - Who uses it?
+    - What does it do? How does it do these things? How is it different from other tools? What can it do that other tools cannot do? What can't it do that other tools can do?
+  - From each article, write down two questions to ask
+  - **Points to Understand, in General:**
+    - Technology stack
+    - Data tools and infrastructure
+    - Which tools were bought vs developed?
+    - Which open-source contributions has the company made?
+    - History and development of various engineering projects
+    - Quantity/breakdown of engineering resources
+    - How well did the tools address the users' requirements?
+      - Best experiences and pain points
+      - Which tools were abandoned and why?
+      - Comparison to competitors and to state of the art
+      - What has the company done to address these points?
+    - Engineers' experience with CI/CD tools
+      - How often run into problems
+      - How long to troubleshoot
+    - What projects are planned and what needs do they fulfill?
+    - What is the engineering org's strategic vision?
+    - Org-wide migration in the last two years
+      - E.g., shift from bare metal to cloud vendor; stop using various tools
+      - Have there been U-turns in migrations? What motivated the U-turns?
+    - Security breaches in the history of the company?
+    - What can I learn and cannot learn from this company in the next four years?
+    - Blog on reverse interviewing
+
+- **Summary**
+  - Everything is a tradeoff
+  - Be mindful of time. Clarify important points and focus on them
+  - Clarify the system requirements and discuss possible tradeoffs in the system's capabilities to optimize for them
+  - Draft the API specification to satisfy the functional requirements
+  - Draw connections between users and data (read and write)
+  - Other concerns: logging, monitoring, alerting, search, and anything else that comes up
