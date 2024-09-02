@@ -81,15 +81,30 @@
         - no linearizability
       - what can we do to prevent and/or mitigate each situation to improve fault-tolerance of component and overall system?
 - design the data model. discuss possible analytics.
-- discuss failure design, graceful degradation,
+- search bar
+  - Elasticsearch
+    - loose mapping of terms from SQL DB to ES:
+      - DB: index
+      - Partition: shard
+      - Table: type (deprecated without replacement)
+      - Column: field
+      - Row: document
+      - Schema: mapping
+      - Index: everything is indexed
+    - query context
+      - "how well does the document match the query clause?" — relevance score
+    - filter context
+      - "does this document match the query clause?" — yes or no
+- discuss failure design, graceful degradation
   - levels of urgency of failures
     - if service is dependency of other services, maybe higher urgency
   - observability: logging, monitoring, alerting
+    - **never forget to mention monitoring!**
     - refer to Google's SRE book for 4 golden signals of monitoring:
       - latency - we could add alerts for latency exceeding SLA
       - traffic — alerts for higher traffic than supported by load testing
       - errors - high-urgency alerts for 500s and select 400s that must be addressed urgently
-      - saturation — depending on system constraints (CPU, memory, I/O), set up utilization targets that should not be exceeded; another example: file or DB usage may run out 
+      - saturation — depending on system constraints (CPU, memory, I/O), set up utilization targets that should not be exceeded; another example: file or DB usage may run out
     - 3 instruments of monitoring: metrics (a variable we can measure), dashboards, alerts
       - these are populated by processing log data
     - logging
@@ -122,7 +137,8 @@
         - failure to implement such automation is runbook abuse
         - if certain instructions are to run commands to view metrics
           - display those metrics on dashboard
-      - TODO: https://learning-oreilly-com.ezproxy.bpl.org/videos/acing-the-system/9781633439108VE/9781633439108VE-ace_ch25/
+      - prometheus (monitoring system) + grafana (visualization)
+    - streaming and batch audit of data quality
   - bottlenecks
   - load balancing
   - removing single points of failure
@@ -130,4 +146,52 @@
   - disaster recovery
   - caching
 - discuss complexity and tradeoffs, maintenance and decommissioning processes, costs
-- reflect on the interview and evaluating the company
+  - extend the service to support other types of users
+    - extend the current services
+    - build new services
+    - tradeoffs
+  - alternative architectural decisions
+    - revisit earlier-mentioned alternatives in more detail
+  - usability metrics
+    - collect use-case specific metrics to influence product development
+      - e.g.
+        - for a search engine, how close to the top of the results were users finding what they needed
+        - number of help desk tickets created per week (we want self-service)
+    - UI components to solicit feedback from users
+- reflect on the interview
+- evaluating the company
+  - before your interview, read blogs to learn:
+    - what is this tool?
+    - who uses it?
+    - what does it do? how does it do these things? how is it different from other tools? what can it do that other tools cannot do? what can't it do that other tools can do?
+  - from each article, write down two questions to ask
+  - some points to understand, in general:
+    - technology stack
+    - data tools and infrastructure
+    - which tools were bought vs developed?
+    - which open-source contributions has the company made?
+    - history and development of various engineering projects
+    - quantity/breakdown of engineering resources
+    - how well did the tools address the users' requirements?
+      - best experiences and pain points
+      - which tools were abandoned and why?
+      - comparison to competitors and to state of the art
+      - what has the company done to address these points?
+    - what are engineers' experience with CI/CD tools?
+      - how often run into problems
+      - how long to troubleshoot
+    - what projects are planned and what needs do they fulfill?
+    - what is the eng. org's strategic vision?
+    - org-wide migration in the last two years?
+      - e.g., shift from bare metal to cloud vendor; stop using various tools
+      - have there been U-turns in migrations? what motivated the U-turns?
+    - security breaches in the history of the company?
+    - what can i learn and cannot learn from this company in the next four years?
+    - https://blog.pragmaticengineer.com/reverse-interviewing/
+- summary
+  - everything is a tradeoff
+  - be mindful of time. clarify important points and focus on them.
+  - clarify the system requirements and discuss possible tradeoffs in the system's capabilities to optimize for them
+  - draft the API specification to satisfy the functional requirements
+  - draw connections between users and data (read and write)
+  - other concerns: logging, monitoring, alerting, search, anything else that comes up.
