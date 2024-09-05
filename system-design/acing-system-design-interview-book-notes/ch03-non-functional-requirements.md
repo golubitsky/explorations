@@ -1,0 +1,31 @@
+- **Functional Requirements**
+
+  - Inputs and outputs of the system
+  - API Specification
+
+- **Non-Functional Requirements**
+  - **Scalability**
+    - Ability of the system to adjust its hardware usage easily to support its load
+  - **Availability**
+    - Percentage of time the system can accept inputs and return the desired response
+  - **Performance**
+    - **Latency/P99**
+      - Time taken for the user's request to return a response
+    - **Bandwidth**
+      - Maximum request rate
+    - **Throughput**
+      - Current request rate being processed by the system
+      - Commonly used interchangeably (incorrectly) with bandwidth
+      - Inverse of latency — a system with low latency has high throughput
+  - **Fault Tolerance**
+    - Ability of the system to continue operating when some components fail
+    - Prevention of permanent harm resulting from downtime
+  - **Security**
+    - Prevention of unauthorized access to systems
+  - **Privacy**
+    - Access control to personally identifiable information (PII)
+  - **Accuracy**
+    - A system's data may not need to be accurate
+    - Accuracy trade-offs to improve cost/complexity is often a relevant discussion
+  - **Consistency**
+    - Whether data in all nodes/machines must match
