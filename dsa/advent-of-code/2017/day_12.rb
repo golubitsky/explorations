@@ -14,12 +14,9 @@ def parsed(data)
   graph
 end
 
-def part_one(data)
-  graph = parsed(data)
-
+def bfs(node, graph, seen = Set.new)
   q = Queue.new
-  seen = Set.new
-  q.push(0)
+  q.push(node)
 
   until q.empty?
     cur = q.pop
@@ -29,10 +26,33 @@ def part_one(data)
     end
   end
 
-  seen.size
+  seen
+end
+
+def part_one(data)
+  graph = parsed(data)
+
+  bfs(0, graph).size
+end
+
+def part_two(data)
+  graph = parsed(data)
+
+  seen = Set.new
+  group_count = 0
+
+  graph.each_key do |node|
+    next if seen.include?(node)
+
+    seen = bfs(node, graph, seen)
+    group_count += 1
+  end
+
+  group_count
 end
 
 if __FILE__ == $0
   data = File.readlines('day_12_input.txt')
   p part_one(data)
+  p part_two(data)
 end
