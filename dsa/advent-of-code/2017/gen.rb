@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 def create_files(n)
   n_str = n.rjust(2, '0')
 
@@ -11,7 +13,7 @@ def create_files(n)
 
     if __FILE__ == $0
       data = File.readlines("day_#{n_str}_sample.txt")
-      part_one(data)
+      p part_one(data)
     end
   RUBY
 
@@ -21,4 +23,4 @@ def create_files(n)
   puts "Files created: #{ruby_file}, #{input_file}, #{sample_file}"
 end
 
-create_files(ARGV[0]) if __FILE__ == $0
+create_files(ARGV[0]) if __FILE__ == $PROGRAM_NAME

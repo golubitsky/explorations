@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'set'
 
 def parsed(data)
@@ -51,7 +53,7 @@ def part_two(data)
   group_count
 end
 
-if __FILE__ == $0
+if __FILE__ == $PROGRAM_NAME
   data = File.readlines('day_12_input.txt')
   p part_one(data)
   p part_two(data)
