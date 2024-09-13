@@ -67,6 +67,8 @@ end
 def visualize(delayed_packets, firewall)
   return unless delayed_packets.size >= 11
 
+  packet = delayed_packets[10]
+
   low_depth, high_depth = firewall.keys.minmax
   max_range = firewall.values.map { |sensor| sensor[:range] }.max
 
@@ -74,22 +76,32 @@ def visualize(delayed_packets, firewall)
   puts labels
   pos = 0
   while pos < max_range
-    puts (low_depth..high_depth).map { |layer| visualize_depth(layer, firewall[layer], pos, delayed_packets[10]) }.join
+    puts (low_depth..high_depth).map { |layer| visualize_depth(layer, firewall[layer], pos, packet) }.join
 
     pos += 1
   end
+  return unless packet[:time] >= 7
+
+  p packet
+  exit
 end
 
 def part_two(data)
   firewall = parsed_firewall(data)
   low_depth, high_depth = firewall.keys.minmax
 
-  severity = 0
-  delayed_packets = [{ depth: low_depth - 1, caught: false }] # start one before the first real layer
+  delayed_packets = [{ depth: low_depth - 1, caught: false, time: 0 }] # start one before the first real layer
 
-  until delayed_packets.any? { |packet| packet == high_depth && !packet[:caught] }
-    delayed_packets.map! { |packet| { **packet, depth: packet[:depth] + 1 } }
-    visualize(delayed_packets, firewall)
+  global_time = -1
+
+  loop do
+    target_packet = delayed_packets.find { |packet| packet[:depth] == high_depth && !packet[:caught] }
+    return target_packet[:time] - target_packet[:depth] if target_packet
+
+    global_time += 1
+    delayed_packets.reject! { |packet| packet[:depth] > high_depth || packet[:caught] }
+    delayed_packets.map! { |packet| { **packet, depth: packet[:depth] + 1, time: packet[:time] + 1 } }
+    # visualize(delayed_packets, firewall)
 
     delayed_packets.each_with_index do |packet, delay|
       packet[:caught] = true if firewall[packet[:depth]] && firewall[packet[:depth]][:sensor_pos].zero?
@@ -97,14 +109,14 @@ def part_two(data)
 
     move_sensors!(firewall)
 
-    delayed_packets << { depth: low_depth - 1, caught: false }
+    delayed_packets << { depth: low_depth - 1, caught: false, time: global_time }
   end
-
-  severity + 1
 end
 
 if __FILE__ == $0
-  data = File.readlines('day_13_sample.txt')
-  # p part_one(data)
+  data = File.readlines('day_13_input.txt')
+  p part_one(data)
+  # Brute force is sufficient to solve this in about a minute.
+  # It's not needed, but maybe there's a way to optimize by finding the cycles in the sensor movements?
   p part_two(data)
 end
