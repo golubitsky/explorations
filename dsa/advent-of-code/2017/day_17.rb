@@ -66,6 +66,21 @@ def part_one(n_steps)
   node.next_node.value
 end
 
+def part_two(n_steps)
+  list = CircularLinkedList.new
+  node = list.insert_after(nil, 0)
+  starting_node = node
+
+  (1..50_000_000).each do |n|
+    node = list.node_n_steps_forward(node, n_steps)
+    node = list.insert_after(node, n)
+    p n if n % 1000000 == 0
+  end
+
+  starting_node.next_node.value
+end
+
 if __FILE__ == $0
-  p part_one(301) # sample
+  p part_one(301)
+  p part_two(301) # The brutest of forces!
 end
