@@ -15,7 +15,7 @@ class CircularLinkedList
 
   def insert_after(existing_node, value)
     new_node = Node.new(value)
-
+    
     if @head.nil?
       # If the list is empty, initialize it with the new node
       @head = new_node
