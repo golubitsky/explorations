@@ -125,7 +125,9 @@ def part_two(data) # AKA operating system?
     zero.enqueue(result_one) if result_one.is_a?(Integer)
     one.enqueue(result_zero) if result_zero.is_a?(Integer)
 
-    break if zero.q.empty? && one.q.empty? && [result_zero, result_one].all? { |r| %i[done waiting].include?(r) }
+    break if [result_zero, result_one].all?(:done)
+    break if zero.q.empty? && [result_zero, result_one].all? { |r| %i[done waiting].include?(r) }
+    break if one.q.empty? && [result_zero, result_one].all? { |r| %i[done waiting].include?(r) }
   end
 
   one.send_count
