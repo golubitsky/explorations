@@ -28,11 +28,12 @@ def char(pos, grid)
   grid[pos[0]][pos[1]]
 end
 
-def part_one(data)
+def solution(data)
   grid = data.map { |x| x.gsub("\n", '') }
   letters = []
   pos = start_pos(grid)
   direction = :down
+  step_count = 0
   loop do
     c = char(pos, grid)
 
@@ -43,14 +44,15 @@ def part_one(data)
     elsif c == '+'
       direction = new_direction_at_junction(pos, grid, direction)
     else
-      puts letters.join
+      puts letters.join, step_count
       exit
     end
     pos = next_pos(pos, direction)
+    step_count += 1
   end
 end
 
 if __FILE__ == $0
   data = File.readlines('day_19_input.txt')
-  p part_one(data)
+  p solution(data)
 end
