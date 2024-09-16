@@ -1,7 +1,7 @@
 require 'matrix'
 
 def parsed_ints(string)
-  string.scan(/\d+/).map(&:to_i)
+  string.scan(/-?\d+/).map(&:to_i)
 end
 
 def parsed_particles(data)
@@ -41,14 +41,30 @@ def index_of_min_distance(particles)
   lowest_index
 end
 
-def part_one(data)
+def solution(data, part = 1)
   particles = parsed_particles(data)
 
   last_index = -1
   count = 0
 
   loop do
-    particles.map! { |particle| updated_particle(particle) }
+    collision_hash = Hash.new { |h, k| h[k] = [] }
+
+    particles = particles.map.with_index do |particle, index|
+      updated = updated_particle(particle)
+      collision_hash[updated[:position]] << index
+
+      updated
+    end
+
+    if part == 2
+      indexes_to_remove = []
+      collision_hash.each_value do |indexes|
+        indexes_to_remove += indexes if indexes.count > 1
+      end
+
+      particles.reject!.with_index { |_, index| indexes_to_remove.include?(index) }
+    end
 
     cur_low_index = index_of_min_distance(particles)
 
@@ -63,11 +79,14 @@ def part_one(data)
     # heuristic: assume that if the same particle is closest n times in a row
     # it will always be closest
     arbitrary_threshold = 100
-    return last_index if count == arbitrary_threshold
+    if count == arbitrary_threshold
+      return last_index if part == 1
+      return particles.count if part == 2
+    end
   end
 end
 
 if __FILE__ == $0
   data = File.readlines('day_20_input.txt')
-  pp part_one(data)
+  pp solution(data, part = 2)
 end
