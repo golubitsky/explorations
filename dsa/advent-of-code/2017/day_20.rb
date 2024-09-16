@@ -28,7 +28,7 @@ end
 
 def index_of_min_distance(particles)
   lowest = Float::INFINITY
-  lowest_index = -1
+  lowest_index = nil
 
   particles.each_with_index do |particle, index|
     m = manhattan_distance(particle)
@@ -41,7 +41,7 @@ def index_of_min_distance(particles)
   lowest_index
 end
 
-def solution(data, part = 1)
+def solution(data, part)
   particles = parsed_particles(data)
 
   last_index = -1
@@ -78,7 +78,7 @@ def solution(data, part = 1)
 
     # heuristic: assume that if the same particle is closest n times in a row
     # it will always be closest
-    arbitrary_threshold = 100
+    arbitrary_threshold = 500
     if count == arbitrary_threshold
       return last_index if part == 1
       return particles.count if part == 2
@@ -88,5 +88,6 @@ end
 
 if __FILE__ == $0
   data = File.readlines('day_20_input.txt')
+  pp solution(data, part = 1)
   pp solution(data, part = 2)
 end
