@@ -32,7 +32,7 @@ def reversed_comps(components):
     return [tuple(reversed(c)) for c in components if c[0] != c[1]]
 
 
-def part_one(data):
+def solution(data):
     all_components = parsed(data)
     all_paths = []
 
@@ -46,15 +46,22 @@ def part_one(data):
 
         all_paths.append(path)
 
+    def strongest(paths):
+        return max(sum([sum(x) for x in p]) for p in paths)
+
     for start in starting_components(all_components):
         find_paths(components=rest_without(start, all_components), path=[start])
 
-    strongest = max(sum([sum(x) for x in p]) for p in all_paths)
+    # part 1
+    print(strongest(all_paths))
 
-    print(strongest)
+    # part 2
+    longest_length = max(len(x) for x in all_paths)
+    longest_paths = [x for x in all_paths if len(x) == longest_length]
+    print(strongest(longest_paths))
 
 
 if __name__ == "__main__":
     with open("day_24_input.txt", "r") as file:
         data = file.readlines()
-    part_one(data)
+    solution(data)
