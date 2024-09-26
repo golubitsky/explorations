@@ -5,10 +5,55 @@
 
 - **Non-Functional Requirements**
   - **Scalability**
-    - Ability of the system to adjust its hardware usage easily to support its load
+    - Definition: ability of the system to adjust its hardware usage easily to support its load
+    - Questions
+      - How much data comes to the system and is retrieved from the system?
+      - How many read queries per second?
+      - How much data per request?
+      - How many video views per second?
+      - How big are sudden traffic spikes?
+    - level 4 (transport layer) vs level 7 (application layer) load balancer
+    - load balancer (scalability) vs reverse proxy (manage client-server communication, public-facing server)
   - **Availability**
-    - Percentage of time the system can accept inputs and return the desired response
-  - **Performance**
+    - Definition: percentage of time the system can accept inputs and return the desired response
+    - Questions
+      - Is high availability required?
+    - Do not assume both strong consistency and low latency are required.
+    - Use synchronous communication protocols when an immediate response is absolutely necessary.
+      - Do not assume all processing must be done synchronously.
+    - Rate limiting vs throttling
+      - https://www.linkedin.com/pulse/decoding-api-throttling-rate-limiting-unveiling-crucial-differences/
+    - MTTR (Mean Time to Recovery) and MTBF (Mean Time Between Failures)
+      - https://www.atlassian.com/incident-management/kpis/common-metrics
+  - **Fault Tolerance**
+    - Definition: ability of the system to continue operating when some components fail
+    - Prevention of permanent harm resulting from downtime
+    - Availability and fault-tolerance are often discussed together
+      - availability is a measure of uptime/downtime
+      - fault-tolerance is not a measure but rather a system characteristic
+    - error-handling
+    - replication
+      - redundant copies of a component
+      - leader and follower(s)
+      - as you move the replicas closer together (data center, rack)
+        - trade off fault-tolerance for higher performance
+    - exponential backoff and retry
+    - caching responses from dependencies
+      - is stale data better than no data?
+    - Checkpointing, such as in ETL pipelines that use message brokers such as Kafka.
+    - Dead letter queue; trade off complexity for reliability
+      - simplest option: drop failed requests
+      - implement DLQ with try/catch block; request is lost if host fails
+      - messaging or event-streaming
+        - https://thenewstack.io/choosing-between-message-queues-and-event-streams/
+    - Logging and periodic auditing
+    - Bulkhead
+      - more info in Release It!: Design and Deploy Production-Ready Software
+    - Fallback
+      - cache
+      - alternate third-party API
+      - Amazon avoids this pattern because it's hard to test: https://aws.amazon.com/builders-library/avoiding-fallback-in-distributed-systems/
+  - **Performance** TODO: 3.4
     - **Latency/P99**
       - Time taken for the user's request to return a response
     - **Bandwidth**
@@ -17,9 +62,6 @@
       - Current request rate being processed by the system
       - Commonly used interchangeably (incorrectly) with bandwidth
       - Inverse of latency — a system with low latency has high throughput
-  - **Fault Tolerance**
-    - Ability of the system to continue operating when some components fail
-    - Prevention of permanent harm resulting from downtime
   - **Security**
     - Prevention of unauthorized access to systems
   - **Privacy**
