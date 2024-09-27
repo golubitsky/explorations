@@ -53,21 +53,127 @@
       - cache
       - alternate third-party API
       - Amazon avoids this pattern because it's hard to test: https://aws.amazon.com/builders-library/avoiding-fallback-in-distributed-systems/
-  - **Performance** TODO: 3.4
+  - **Performance**
     - **Latency/P99**
       - Time taken for the user's request to return a response
+      - Questions
+        - How soon after request is the response needed?
+          - Possibility of async/background processing.
+      - Factors
+        - Distance between users and data centers
+          - Deploy the service in a data center geographically close to its users
+          - If users are geographically dispersed, deploy to multiple data centers
+            - Service must be horizontally scalable
+        - Traffic
+        - Network bandwidth
+        - Backend processing (business logic and persistence)
+      - Techniques
+        - CDN
+        - Caching
+        - Decrease data size with RPC instead of REST
+        - Design your own protocol with a framework like Netty to use TCP and UDP instead of HTTP
+        - Use batch and streaming techniques
+        - Read-time vs write-time processing
     - **Bandwidth**
       - Maximum request rate
     - **Throughput**
       - Current request rate being processed by the system
       - Commonly used interchangeably (incorrectly) with bandwidth
       - Inverse of latency — a system with low latency has high throughput
+  - **Consistency (Linearizability)**
+    - Definition: all nodes containing the same data at a moment in time
+      - CAP consistency: linearizability, i.e., nodes start serving changes at the same time
+        - Graphic of other models: https://jepsen.io/consistency
+      - Distinct from consistency in ACID (a consistent transaction will not violate integrity constraints placed on the data by the database rules)
+        - An ACID database, including RDBMS databases, cannot accept writes when it experiences a network partition because it cannot maintain ACID consistency if writes occur during a network partition
+    - Tradeoffs
+      - Linearizability requires lower availability, since all or most nodes must have consensus before they can serve requests
+      - Linearizability is more complex and expensive
+    - Example databases
+      - MongoDB, HBase, and Redis trade off availability for linearizability
+      - CouchDB, Cassandra, Dynamo, Hadoop, and Riak trade off linearizability for availability
+        - i.e., "eventually consistent"
+    - **Linearizability and eventual consistency techniques**
+      - **Full Mesh**
+        - Hosts broadcast messages to all other hosts
+        - Easier to implement
+        - Not scalable: number of messages grows quadratically with number of hosts
+        - Host discovery solutions
+          - Configuration file that lists all hosts; when list changes, deploy file to all hosts
+          - Third-party service to listen for heartbeats from every host; hosts use this service to get list of addresses
+      - **Quorum**
+        - Only a majority of hosts need to have the data for the system to be considered consistent
+        - More scalable: reduces the number of messages as number of hosts grows
+        - Balances consistency and availability
+    - **Eventual Consistency techniques with writes to a single location**
+      - **Event Sourcing**
+      - **Coordination Service**
+        - A third-party component that chooses a leader node or set of leader nodes
+        - Disadvantages
+          - Complexity
+          - Needs to be highly reliable and ensure one and only one leader is selected
+            - Purpose: avoid "split brain" https://medium.com/nerd-for-tech/split-brain-in-distributed-systems-252b0d4d122e
+              - See also: Martin Kleppmann DDIA p. 158
+          - Can become a single point of failure if not designed with redundancy
+          - Adds latency due to the coordination required
+        - Other nodes send messages to leader, which may do processing and send back final result
+        - Each node only needs to communicate with leader(s)
+        - Each leader(s) manages a number of nodes
+        - **Examples**
+          - Algorithms
+            - Paxos
+            - Raft
+            - Zab
+            - Single leader multiple follower in SQL (a technique to allow scalable reads)
+          - ZooKeeper is a distributed coordination service
+            - Advantages
+              - Access control (https://zookeeper.apache.org/doc/r3.1.2/zookeeperProgrammers.html#sc_ZooKeeperAccessControl).
+              - Stores data in memory for high performance.
+              - Scalability, with horizontal scaling by adding hosts to the ZooKeeper Ensemble (https://zookeeper.apache.org/doc/r3.1.2/zookeeperAdmin.html#sc_zkMulitServerSetup).
+              - Guaranteed eventual consistency within a specified time bound or strong consistency with higher cost (https://zookeeper.apache.org/doc/current/zookeeperInternals.html#sc_consistency). ZooKeeper trades off availability for consistency; it is a CP system in the CAP theorem.
+              - Clients can read data in the order it is written.
+              - See also: https://stackoverflow.com/questions/36312640/whats-the-purpose-of-using-zookeeper-rather-than-just-databases-for-managing-di
+      - **Distributed Cache**
+        - **Examples**
+          - Redis
+            - Note: this is an in-memory cache that can be used to build a distributed cache
+              - https://redis.io/about/
+              - https://stackoverflow.com/questions/18376665/redis-distributed-or-not
+          - Memcached
+          - AWS Elasticache (managed)
+        - Nodes periodically fetch new or updated data from origin and then update the distributed cache
+        - Advantages
+          - Simple
+          - Low latency
+          - Scalable independently of our service
+        - Disadvantages
+          - More network requests than any other solution than full mesh
+    - **Eventual Consistency Techniques With Tradeoffs**
+      - **Gossip Protocol**
+        - Modeled after how epidemics spread
+        - Each node randomly selects another node periodically or with a random interval and then shares data
+        - Trade off consistency for lower cost and complexity
+        - **Examples**
+          - Cassandra uses a gossip protocol to maintain consistency across distributed data partitions
+          - DynamoDB uses a gossip protocol called “vector clocks” to maintain consistency across multiple data centers.
+        - Advantages
+          - Scalable and fault-tolerant, as any node can communicate with others.
+        - Disadvantages
+          - Convergence time can be unpredictable, leading to temporary inconsistencies.
+          - Increased communication overhead, as nodes must frequently share state.
+      - **Random Leader Selection**
+        - A simple algorithm to elect a leader
+        - Does not guarantee one and only one leader
+        - Disadvantages
+          - Possible duplicate requests
+          - Unnecessary network traffic
+        - **Examples**
+          - Kafka uses a leader-follower replication model with random leader selection to provide fault-tolerance.
+          - YARN uses a random leader selection approach to manage resource allocation across a cluster of hosts.
+  - **Accuracy** TODO: 3.6 https://learning-oreilly-com.ezproxy.bpl.org/library/view/acing-the-system/9781633439108/OEBPS/Text/03.html#heading_id_25
+    - A system's data may not need to be accurate
+    - Accuracy trade-offs to improve cost/complexity is often a relevant discussion
   - **Security**
     - Prevention of unauthorized access to systems
   - **Privacy**
     - Access control to personally identifiable information (PII)
-  - **Accuracy**
-    - A system's data may not need to be accurate
-    - Accuracy trade-offs to improve cost/complexity is often a relevant discussion
-  - **Consistency**
-    - Whether data in all nodes/machines must match
