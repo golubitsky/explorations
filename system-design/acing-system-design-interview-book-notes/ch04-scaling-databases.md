@@ -1,0 +1,89 @@
+- **Storage services**
+
+  - Compared to stateless services, stateful services have mechanisms to ensure consistency and require redundancy to avoid data loss.
+    - examples of mechanisms:
+      - Paxos for strong consistency
+      - eventual-consistency
+    - tradeoffs have to be made, depending on requirements for
+      - consistency
+      - complexity
+      - security
+      - latency
+      - performance
+    - strong consistency
+      - only one consistent state
+      - all accesses are seen by all processes in the same order
+    - weak consistency
+      - multiple states
+      - processes can read data in different order than modified
+  - **Motivation for use**
+    - Keep as many services stateless, to avoid this complexity. Other reasons:
+      - if individual host has state, we need to implement sticky sessions (consistently route same user to same host)
+      - need to replicate data in case host fails, and handle failover
+    - By pushing state to a stateful storage device, we can choose the appropriate storage/DB technology and avoid designing state management
+  - **Categories**
+    - Database
+      - SQL: relational, primary/foreign keys, ACID transactions
+      - NoSQL: does not have all SQL properties
+      - Column-oriented: data stored in columns instead of rows, for efficient access.
+        - examples: HBase, Cassandra
+      - Key-value: usually used for caching using various techniques like LRU
+        - has high performance but does not require high availability
+        - examples: Memcached, Redis, AWS Elasticache
+    - Document: a key-value DB with no or much larger size limits
+      - example: MongoDB
+    - Graph: designed to efficiently store relationships between entities
+      - examples: Neo4j, RedisGraph, Amazon Neptune
+    - File storage: store data in files/directories; a form of key-value, where key=path
+    - Block storage: store data in evenly sized chunks w/ unique IDs
+      - unlikely to use in web apps
+      - relevant for designing lower level components of other storage systems (like databases)
+    - Object storage
+      - flatter hierarchy than file storage
+      - objects usually accessed via HTTP APIs
+      - slow writes and objects can't be modified
+      - suited for static data
+      - example: AWS S3
+  - **When to use vs. avoid databases**
+    - Based on object/file size
+      - less than 256K -> database
+      - 256K - 1M -> read:write ratio and rate of object overwrite/replacement are important factors
+        - more replacement can lead to fragmentation, in which case filesystem can be more performant
+        - more info: https://www.microsoft.com/en-us/research/publication/to-blob-or-not-to-blob-large-object-storage-in-a-database-or-a-filesystem/
+      - larger than 1M -> filesystem
+    - Other considerations
+      - Database objects are loaded entirely into memory: inefficient to stream a file from a database
+      - Replication will be slow if database table rows are large objects
+  - **Replication**
+    - Replication: making copies of data, called replicas, and storing them on different nodes.
+    - Partitioning and sharing are both about dividing a data set into subsets.
+      - Sharding implies the subsets are distributed across multiple nodes
+      - Partitioning does not.
+    - **Motivations**
+      - A single host has limitations, so it cannot fulfill requirements:
+        - Fault-tolerance
+          - backup of data to nodes within and across data centers, in case of node or network failure
+          - define failover process for other nodes to take over roles and partitions/shards of failed nodes
+        - Higher storage capacity
+          - Vertical scaling with multiple large hard drives is expensive
+          - A single node's throughput could become a bottleneck
+        - Higher throughput
+          - Process reads and writes for multiple simultaneous processes and users
+        - Lower latency
+          - Geographically distribute replicas closer to dispersed users
+          - Increase number of replicas in a data center if there is more read traffic in that area
+        - To scale reads: increase the number of replicas of that data.
+        - To scale writes: more difficult; detailed below.
+    - **Distributing replicas**
+      - Typical design: one backup onto a host on the same rack and one backup on a host on a different rack or data center (or availability zone) or both
+      - Data may also be sharded
+        - Tradeoff: need to track the shards' locations
+        - Benefits
+          - Scale storage: if database/table too big to fit on one node, sharding allows it to remain a single logical unit
+          - Scale memory: if DB stored in memory, vertical scaling of memory quickly becomes expensive ($)
+          - Scale processing: sharded DB can take advantage of parallel processing
+          - Locality: to reduce latency, shard such that the data a particular cluster node needs is likely to be stored locally rather than on another node
+    - **Single-leader replication**
+      - Purpose: scale reads, not writes.
+      - All write operations occur on single leader node
+      - 
