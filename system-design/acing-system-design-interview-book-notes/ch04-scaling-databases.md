@@ -85,5 +85,53 @@
           - Locality: to reduce latency, shard such that the data a particular cluster node needs is likely to be stored locally rather than on another node
     - **Single-leader replication**
       - Purpose: scale reads, not writes.
-      - All write operations occur on single leader node
-      - 
+      - SQL service loses ACID consistency due to inherent latency in the replication
+      - Design
+        - All write operations occur on single leader node
+        - Reads from any of N followers
+        - If leader fails, secondary leader promoted to leader
+        - A single node has max throughput, so number of followers is also limited
+          - Can improve this with pyramid-like multi-level approach; each level replicates to level below; consistency is further delayed
+        - Limitations
+          - Entire DB must fit on single host
+          - Eventual consistency
+      - Simplest to implement
+      - **Scaling via query logic in app layer (hack)**
+        - Use case: DB size > single host; cannot reduce DB size; we want to continue using SQL
+        - partition the DB across multiple hosts
+        - need additional metadata about where data is stored
+        - application has to maintain query logic
+    - **Multi-leader replication**
+      - Purpose: scale writes and database storage size.
+      - Design
+        - Multiple nodes designated as leaders
+        - Writes can be made to any leader
+        - Each leader must replicate writes to all other nodes
+      - Disadvantage: must handle race conditions, not present in single-leader replication
+        - e.g., a row is simultaneously updated on one leader and deleted on another leader
+          - using timestamps doesn't work because clocks are not perfectly synchronized across nodes
+          - attempting to use same clock across services doesn't work due to **clock skew**
+            - impossible to determine order if queries made to multiple nodes within time interval < clock skew
+      - **Leaderless replication**
+        - All nodes are equal
+        - How to handle race conditions?
+          - One solution: **quorum** — n/2 + 1 nodes agree on read/write operations
+            - higher quorums provide better consistency but with increased latency
+            - if we need consistency, we can trade off between writes and reads
+              - for fast writes: set low write (W) quorum and high read (R) quorum
+              - for fast reads: set high write quorum and low read quorum
+              - to get strong consistency, **R + W > N**, where N is the number of nodes
+                - otherwise, only eventual consistency possible, UPDATE and DELETE cannot be consistent
+            - Strong consistency sacrifices performance and availability for up-to-date data, while eventual consistency offers better performance and availability but allows for temporary inconsistencies.
+        - Examples: Cassandra, Dynamo, Riak, and Voldemort
+  - **Scaling storage capacity with sharded databases**
+    - Imposes limitations on SQL operations
+      - JOIN queries are slower
+      - JOINs on shard keys are faster
+      - Aggregation operations involve both DB and app logic
+        - Sum and mean would be easier (implement by each node returning sum and count)
+        - Median and percentile would be more complicated and slower
+    - See also: https://aws.amazon.com/blogs/database/sharding-with-amazon-relational-database-service/
+  - **Aggregating Events**
+  - **Messaging**
+    - Use to smooth out uneven traffic, prevent a service from being overloaded by traffic spikes
