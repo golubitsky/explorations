@@ -94,7 +94,18 @@
         - We should be cautious when using GraphQL for external APIs
           - similar to exposing a database and allowing clients to make SQL queries
     - Actor model
-      - TODO: fill in this section
+      - Computational framework used to design systems that handle concurrent tasks
+      - Suited for building highly concurrent, distributed, and fault-tolerant systems
+      - Actor is the core unit of computation
+      - Each actor can
+        - Send messages to other actors asynchronously
+        - Receive messages and process them independently
+        - Create new actors
+      - Stateless
+      - Scalable because actors are independent and can be processed in parallel
+      - Decentralized
+      - Fault-tolerance
+        - Actors can supervise other actors to detect and recover from failure
     - WebSocket
       - Communications protocol for full-duplex communication over a persistent TCP connection
         - versus HTTP, which creates/closes a new connection for every request/response
