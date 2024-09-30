@@ -135,3 +135,7 @@
   - **Aggregating Events**
   - **Messaging**
     - Use to smooth out uneven traffic, prevent a service from being overloaded by traffic spikes
+  - **Denormalization**
+    - Trade off space and query complexity for performance
+  - **Caching**
+    - TODO
