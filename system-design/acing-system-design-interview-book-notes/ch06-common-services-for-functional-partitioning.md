@@ -1,0 +1,117 @@
+- **Common functionalities of various services**
+  - **API gateway**
+    - Disadvantages
+      - Additional latency to each request
+      - Need a cluster of hosts; requires scaling to control costs
+    - Use cases
+      - Security
+        - Authentication/authorization
+        - SSL termination (TLS)
+        - Server-side data encryption
+      - Error-checking
+        - Request validation
+          - proper formatting; e.g. POST request body contains valid JSON
+          - presence of required parameters
+            - MG: I wouldn't put business logic specific to backend services into the API gateway.
+        - Request deduplication
+          - useful if our service expects "exactly once" or "at most once" delivery
+          - if our service is idempotent or stateless, there is no issue with duplicate requests
+      - Performance and availability
+        - Caching
+        - Rate limiting
+        - Request dispatching 
+          - Common patterns like bulkhead and circuit breaker help implement resource isolation and make services more resilient when remote calls fail.
+      - Logging and analytics
+        - Gather real-time information for e.g. analytics, auditing, billing, and debugging.
+  - **Service mesh/sidecar pattern**
+    - Data plane
+      - Set of intelligent proxies (AKA "sidecars") that mediate and control all network comm. between services
+      - Each sidecar can provide
+        - Identity management
+        - Rate limiting
+        - Observability: Logging, monitoring, alerting
+        - Auditing
+        - Automatic mTLS encryption
+        - Traffic routing/splitting
+        - Self-healing
+    - Control plane
+      - Manage and configure the proxies to route traffic
+    - See also: https://istio.io/latest/docs/ops/deployment/architecture/
+  - **Metadata service**
+    - Stores information that is used by multiple components within a system
+    - Services pass IDs between each other
+    - Analogous to SQL normalization
+    - Example
+      - ETL pipeline
+        - Producer
+          - writes email HTML template to metadata service
+          - publishes message with ID of email HTML template
+        - Consumer
+          - retrieves the email HTML template by ID from the metadata service
+    - Should support high read volume to handle traffic spikes
+  - **Service discovery**
+    - A way for clients to identify which service hosts are available.
+    - A service registry is a database that keeps track of the available hosts of a service.
+  - **Library vs. service**
+    - Language specific vs. technology-agnostic
+  - **Common API paradigms**
+    - REST
+      - uses HTTP methods and request/response body most commonly encoded in JSON or XML
+      - Caching
+        - Declare resources as cachable whenever possible
+          - reduce network traffic
+          - higher availability (resource available even if service is not)
+          - better scalability (less load on server)
+      - Disadvantages
+        - No integrated documentation mechanisms other than hypermedia or OPTIONS
+        - No standardized versioning procedure
+        - No universal spec
+    - RPC
+      - Technique to execute a procedure on remote host without programmer handling network details
+      - Designed for resource optimization
+        - good choice for IoT devices like smart home meters.
+        - lower resource consumption also becomes significant at web scale
+      - Protobuf, Avro, Thrift can save on network traffic vs JSON
+      - Schemas are defined in files
+        - Definition is required
+        - Clear procedure for backward/forward compatibility during schema modification
+      - Disadvantages
+        - Binary protocol
+          - Clients must update to latest version of schema files
+            - troublesome especially outside of org
+          - Monitoring is harder than with text protocols
+    - GraphQL
+      - A query language that enables declarative data fetching
+      - Integrated API documentation
+      - Client decides exactly what they they want and its format
+      - Server is efficient and delivers exactly what client needs
+      - Disadvantages
+        - May be too complex for simple APIs
+        - Higher learning curve than RPC or REST, including security mechanisms
+        - Smaller user community
+        - Encodes in JSON only
+        - User analytics might be more complex because each API user performs slightly different queries
+        - We should be cautious when using GraphQL for external APIs
+          - similar to exposing a database and allowing clients to make SQL queries
+    - Actor model
+      - TODO: fill in this section
+    - WebSocket
+      - Communications protocol for full-duplex communication over a persistent TCP connection
+        - versus HTTP, which creates/closes a new connection for every request/response
+      - Implementation
+        - HTTP handshake
+          - Create connection
+          - Request server to upgrade to WebSocket from HTTP
+        - Subsequent messages use WebSocket over the persistent TCP connection
+      - Considerations
+        - Less scalable
+          - Persistent connections
+            - increase overhead
+          - Stateful
+            - Requests can only be handled by specific host
+        - WebSocket allows p2p communication, so no backend is required
+          - Trades off scalability for lower latency and higher performance.
+    - Summary
+      - Start with REST for simplicity
+      - RPC can help larger orgs via efficiency and backwards/forwards compatibility
+      - WebSocket useful for bi-directional comm., including p2p
