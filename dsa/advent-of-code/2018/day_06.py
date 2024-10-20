@@ -67,7 +67,26 @@ def part_one(data):
     print(largest_area)
 
 
+def part_two(data):
+    data = parsed(data)
+    min_x, min_y, max_x, max_y = min_max(data)
+    count = 0
+
+    for x in range(min_x, max_x + 1):
+        for y in range(min_y, max_y + 1):
+            total_distance = 0
+
+            for pos in data:
+                total_distance += distance((x, y), pos)
+
+            if total_distance < 10000:
+                count += 1
+
+    print(count)
+
+
 if __name__ == "__main__":
     with open("day_06_input.txt", "r") as file:
         data = file.readlines()
     part_one(data)
+    part_two(data)
