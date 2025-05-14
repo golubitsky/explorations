@@ -1,82 +1,67 @@
-# 📘 25 Essential Distributed Systems Design Patterns
-Curated from Martin Fowler's blog and related sources. Grouped by category for focused study.
+# 📚 Study Plan: 25 Essential Distributed Systems Patterns
+
+This study order builds your knowledge step-by-step, starting with core concepts like time and coordination, and progressing toward replication, scaling, and fault-tolerance. Each pattern is linked for direct access.
 
 ---
 
-## ⏱️ Time & Ordering
+## ⏱️ 1. Time & Ordering (Start Here)
 
-These patterns help maintain temporal consistency and order across distributed components.
+Understand how distributed systems reason about time and ordering of events.
 
-- [Clock Bound Wait](https://lnkd.in/g5xXEsyb)
-- [Generation Clock](https://lnkd.in/gQ3ZCNgX)
-- [Hybrid Clock](https://lnkd.in/gCkgTjQh)
 - [Lamport Clock](https://lnkd.in/g6Ma6VyB)
+- [Hybrid Clock](https://lnkd.in/gCkgTjQh)
+- [Generation Clock](https://lnkd.in/gQ3ZCNgX)
+- [Clock Bound Wait](https://lnkd.in/g5xXEsyb)
 
 ---
 
-## 🧭 Coordination & Leadership
+## 🧭 2. Leader Election & Coordination
 
-For handling leadership election, failover, and control flow among distributed nodes.
+Learn how systems coordinate roles and ensure only one node is acting as a leader at a time.
 
+- [Heartbeat](https://lnkd.in/gF-tRnQR)
 - [Emergent Leader](https://lnkd.in/gBmu2Z7h)
 - [Leader Follower](https://lnkd.in/gPwejHqP)
 - [Lease](https://lnkd.in/gxqrdgBw)
-- [Heartbeat](https://lnkd.in/gF-tRnQR)
 
 ---
 
-## 🧩 Partitioning & Scalability
+## 🗳️ 3. Consensus & Replication
 
-Key to distributing workloads and scaling effectively.
+Dive into consistency guarantees, replication mechanics, and achieving agreement.
+
+- [Majority Quorum](https://lnkd.in/gXYHNniN)
+- [Replicated Log](https://lnkd.in/gqjWa9tw)
+- [Paxos](https://lnkd.in/gm6qqNPc)
+- [Consistent Core](https://lnkd.in/gPBKWucA)
+- [Follower Reads](https://lnkd.in/gVVSCYvN)
+
+---
+
+## 🧩 4. Partitioning & Scalability
+
+Explore how distributed systems scale out and manage data across partitions.
 
 - [Fixed Partitions](https://lnkd.in/gHtg_wZ6)
 - [Key Range Partitions](https://lnkd.in/gzJDEMt9)
 
 ---
 
-## 🔁 Replication & Consistency
+## 💬 5. Communication Patterns
 
-Foundational to data durability, fault tolerance, and consensus across replicas.
+Design efficient request flows and queueing systems to reduce bottlenecks.
 
-- [Consistent Core](https://lnkd.in/gPBKWucA)
-- [Follower Reads](https://lnkd.in/gVVSCYvN)
-- [Majority Quorum](https://lnkd.in/gXYHNniN)
-- [Replicated Log](https://lnkd.in/gqjWa9tw)
-- [Paxos](https://lnkd.in/gm6qqNPc)
-
----
-
-## 💬 Communication & Message Handling
-
-Patterns focused on batching, pipelining, and managing request lifecycles.
-
-- [Request Batch](https://lnkd.in/g2MBCiE3)
 - [Request Pipeline](https://lnkd.in/gKjhZ8cK)
+- [Request Batch](https://lnkd.in/g2MBCiE3)
 - [Request Waiting List](https://lnkd.in/gRB_kBZS)
 - [Single Socket Channel](https://lnkd.in/gYz9Nsvi)
 - [Singular Update Queue](https://lnkd.in/gKd_zK-N)
 
 ---
 
-## 📡 Dissemination & Gossip
+## 🪣 6. State Progress & Watermarks
 
-How information is propagated across systems in a decentralized manner.
-
-- [Gossip Dissemination](https://lnkd.in/gFbuxsQZ)
-
----
-
-## ✅ Idempotency & Fault Handling
-
-Designing for safe retries and avoiding duplication.
-
-- [Idempotent Receiver](https://lnkd.in/gPJCscbj)
-
----
-
-## 🪣 Watermarks & Progress Tracking
-
-Helps track the state of processing, especially in streaming or log-based systems.
+Used in systems like Kafka or Flink to track processing and replay status.
 
 - [High Watermark](https://lnkd.in/gJBUrcgm)
 - [Low Watermark](https://lnkd.in/gp7neH2D)
@@ -84,13 +69,21 @@ Helps track the state of processing, especially in streaming or log-based system
 
 ---
 
-## 🧠 Study Tip
+## 🔁 7. Resilience & Dissemination
 
-For each pattern:
-- Summarize in your own words
-- Draw a diagram
-- Identify a real-world system that uses it (e.g., Kafka, Raft, Cassandra)
-- Practice explaining trade-offs in mock interviews
+Patterns for ensuring reliable retries and efficient information propagation.
+
+- [Idempotent Receiver](https://lnkd.in/gPJCscbj)
+- [Gossip Dissemination](https://lnkd.in/gFbuxsQZ)
 
 ---
 
+## 🧠 Study Tips
+
+- ✔️ Study 1–2 patterns per day.
+- 📝 Write your own summary and example use case.
+- 🖍️ Draw a diagram to visualize the concept.
+- 🎯 Apply 3+ patterns to a mock system design (e.g., Dropbox, Kafka).
+- 🔄 Revisit and explain to a peer to reinforce understanding.
+
+---
