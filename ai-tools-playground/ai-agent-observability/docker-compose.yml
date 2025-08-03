@@ -1,0 +1,86 @@
+services:
+  # Log storage and querying
+  loki:
+    image: grafana/loki:2.9.0
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - ./loki-data:/loki
+    networks:
+      - agent-network
+
+  # Your main Python application
+  python-app:
+    build:
+      context: ./python-app
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+      - LOKI_URL=http://loki:3100
+      - GIT_MCP_URL=http://git-mcp-server:8001
+      - LOKI_MCP_URL=http://loki-mcp-server:8002
+    volumes:
+      - ./logs:/app/logs # For generating sample logs
+    depends_on:
+      - loki
+      - git-mcp-server
+      - loki-mcp-server
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - agent-network
+
+  # MCP Server for Git operations
+  git-mcp-server:
+    build:
+      context: ./git-mcp-server
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./.git:/app/.git:ro # Mount your repo's git history
+      - ./:/app/repo:ro # Mount source code for analysis
+    environment:
+      - MCP_SERVER_NAME=git-server
+      - REPO_PATH=/app/repo
+    networks:
+      - agent-network
+
+  # MCP Server for Loki log queries
+  loki-mcp-server:
+    build:
+      context: ./loki-mcp-server
+      dockerfile: Dockerfile
+    ports:
+      - "8002:8002"
+    environment:
+      - MCP_SERVER_NAME=loki-server
+      - LOKI_URL=http://loki:3100
+    depends_on:
+      - loki
+    networks:
+      - agent-network
+
+  # # Optional: Log generator for testing
+  # log-generator:
+  #   build:
+  #     context: ./log-generator
+  #     dockerfile: Dockerfile
+  #   volumes:
+  #     - ./logs:/app/logs
+  #   environment:
+  #     - LOKI_URL=http://loki:3100
+  #   depends_on:
+  #     - loki
+  #   networks:
+  #     - agent-network
+
+networks:
+  agent-network:
+    driver: bridge
+
+volumes:
+  loki-data:
