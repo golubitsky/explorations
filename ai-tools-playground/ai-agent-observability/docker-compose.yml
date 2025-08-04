@@ -10,11 +10,27 @@ services:
     networks:
       - agent-network
 
+  # For viewing logs
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
+    depends_on:
+      - loki
+    networks:
+      - agent-network
+
   # Your main Python application
   python-app:
     build:
       context: ./python-app
       dockerfile: Dockerfile
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
     ports:
       - "8000:8000"
     environment:
@@ -26,12 +42,19 @@ services:
       - ./logs:/app/logs # For generating sample logs
     depends_on:
       - loki
+      - grafana
       - git-mcp-server
       - loki-mcp-server
     extra_hosts:
       - "host.docker.internal:host-gateway"
     networks:
       - agent-network
+    # This causes the python-app to hang when Ctrl+C.
+    # logging:
+    #   driver: loki
+    #   options:
+    #     loki-url: "http://loki:3100/loki/api/v1/push"
+    #     loki-batch-size: "400"
 
   # MCP Server for Git operations
   git-mcp-server:
@@ -84,3 +107,4 @@ networks:
 
 volumes:
   loki-data:
+  grafana-data:
