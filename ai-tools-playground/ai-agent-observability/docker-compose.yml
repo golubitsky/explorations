@@ -27,6 +27,7 @@ services:
 
   # Your main Python application
   python-app:
+    container_name: python-app
     build:
       context: ./python-app
       dockerfile: Dockerfile
@@ -50,12 +51,13 @@ services:
       - "host.docker.internal:host-gateway"
     networks:
       - agent-network
-    # This causes the python-app to hang when Ctrl+C.
-    # logging:
-    #   driver: loki
-    #   options:
-    #     loki-url: "http://loki:3100/loki/api/v1/push"
-    #     loki-batch-size: "400"
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://host.docker.internal:3100/loki/api/v1/push"
+        mode: non-blocking
+        max-buffer-size: 4m
+        loki-retries: "3"
 
   # MCP Server for Git operations
   git-mcp-server:
