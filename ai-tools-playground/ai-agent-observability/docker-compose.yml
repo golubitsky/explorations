@@ -39,6 +39,7 @@ services:
       - GIT_MCP_URL=http://git-mcp-server:8001
       - LOKI_MCP_URL=http://loki-mcp-server:8002
     volumes:
+      - ./python-app:/app
       - ./logs:/app/logs # For generating sample logs
     depends_on:
       - loki
