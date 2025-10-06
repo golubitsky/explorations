@@ -1,5 +1,4 @@
 services:
-  # Log storage and querying
   loki:
     image: grafana/loki:2.9.0
     ports:
@@ -10,7 +9,6 @@ services:
     networks:
       - agent-network
 
-  # For viewing logs
   grafana:
     image: grafana/grafana:latest
     ports:
@@ -25,7 +23,6 @@ services:
     networks:
       - agent-network
 
-  # Your main Python application
   python-app:
     container_name: python-app
     build:
@@ -59,7 +56,6 @@ services:
         max-buffer-size: 4m
         loki-retries: "3"
 
-  # MCP Server for Git operations
   git-mcp-server:
     build:
       context: ./git-mcp-server
@@ -75,7 +71,6 @@ services:
     networks:
       - agent-network
 
-  # MCP Server for Loki log queries
   loki-mcp-server:
     build:
       context: ./loki-mcp-server
@@ -89,20 +84,6 @@ services:
       - loki
     networks:
       - agent-network
-
-  # # Optional: Log generator for testing
-  # log-generator:
-  #   build:
-  #     context: ./log-generator
-  #     dockerfile: Dockerfile
-  #   volumes:
-  #     - ./logs:/app/logs
-  #   environment:
-  #     - LOKI_URL=http://loki:3100
-  #   depends_on:
-  #     - loki
-  #   networks:
-  #     - agent-network
 
 networks:
   agent-network:
